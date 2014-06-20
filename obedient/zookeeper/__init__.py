@@ -30,7 +30,7 @@ def make_containers(ships):
                 'JAVA_OPTS': '-Xmx700m',
                 'JAVA_RMI_SERVER_HOSTNAME': ship.fqdn,
                 'VISUALVM_DISPLAY_NAME': '{}-{}'.format(ship.name, 'zookeeper'),
-                'ZOOKEEPER_MYID': myid,
+                'ZOOKEEPER_MYID': str(myid),
             },
         ) for myid, ship in enumerate(ships, 1)])
     return containers
