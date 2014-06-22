@@ -12,11 +12,13 @@ def make_containers(ships):
         ]
     )
 
+    image = Image(repository='yandex/zookeeper', tag='latest')
+
     containers.extend([
         Container(
             name='zookeeper',
             ship=ship,
-            image=Image(repository='nikicat/zookeeper', tag='latest'),
+            image=image,
             volumes=[
                 DataVolume(
                     dest='/var/lib/zookeeper',
