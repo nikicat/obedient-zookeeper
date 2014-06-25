@@ -1,22 +1,35 @@
 from pkg_resources import resource_string
+import os
 from dominator import *
 
-def make_containers(ships):
+def create(
+    ships=[LocalShip()],
+    memory=1024**3,
+    snap_count=os.environ.get('OBEDIENT_ZOOKEEPER_SNAP_COUNT', 10000),
+    global_outstanding_limit=os.environ.get('OBEDIENT_ZOOKEEPER_GLOBAL_OUTSTANDING_LIMIT', 1000),
+):
     containers = []
 
     config = ConfigVolume(
         dest='/opt/zookeeper/conf',
         files = [
-            TemplateFile(TextFile('zoo.cfg'), containers=containers),
+            TemplateFile(
+                TextFile('zoo.cfg'),
+                containers=containers,
+                snap_count=snap_count,
+                global_outstanding_limit=global_outstanding_limit,
+            ),
             TextFile('log4j.properties'),
         ]
     )
+
+    image = Image(repository='yandex/zookeeper', tag='latest')
 
     containers.extend([
         Container(
             name='zookeeper',
             ship=ship,
-            image=Image(repository='nikicat/zookeeper', tag='latest'),
+            image=image,
             volumes=[
                 DataVolume(
                     dest='/var/lib/zookeeper',
@@ -25,7 +38,7 @@ def make_containers(ships):
                 config,
             ],
             ports={'election': 3888, 'peer': 2888, 'client': 2181, 'jmx': 4888},
-            memory=1024**3,
+            memory=memory,
             env={
                 'JAVA_OPTS': '-Xmx700m',
                 'JAVA_RMI_SERVER_HOSTNAME': ship.fqdn,
