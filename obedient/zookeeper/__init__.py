@@ -1,6 +1,6 @@
 from pkg_resources import resource_string
 import os
-from dominator import *
+from dominator.entities import *
 
 def create(
     ships=[LocalShip()],
@@ -47,3 +47,58 @@ def create(
             },
         ) for myid, ship in enumerate(ships, 1)])
     return containers
+
+
+def create_jmxtrans(zookeepers, graphites):
+    graphite_writers = [{
+        '@class': 'com.googlecode.jmxtrans.model.output.GraphiteWriter',
+        'settings': graphite,
+    } for graphite in graphites]
+
+    datatree_attrs = ['NodeCount']
+    datatree_opers = [{
+        'method': 'countEphemerals',
+        'parameters': [],
+    }]
+    follower_attrs = [
+        'PacketsReceived',
+        'PacketsSent',
+        'NumAliveConnections',
+        'MaxRequestLatency',
+        'OutstandingRequests',
+        'PendingRevalidationCount',
+        'MaxClientCnxnsPerHost',
+        'MaxSessionTimeout',
+        'MinSessionTimeout',
+        'AvgRequestLatency',
+    ]
+
+    image = Image(repository='yandex/jmxtrans', tag='latest')
+
+    return [Container(
+        name='zookeeper-jmxtrans',
+        ship=cont.ship,
+        image=image,
+        volumes=[ConfigVolume(
+            dest='/etc/jmxtrans',
+            files=[JsonFile('zookeeper.json',{
+                'servers': [{
+                    'host': cont.ship.fqdn,
+                    'port': cont.getport('jmx'),
+                    'alias': cont.ship.name,
+                    'numQueryThreads': 2,
+                    'queries': [{
+                        'outputWriters': graphite_writers,
+                        'obj': 'org.apache.ZooKeeperService:name0=ReplicatedServer_id{myid},name1=replica.{myid},name2=Follower,name3=InMemoryDataTree'.format(myid=cont.env['ZOOKEEPER_MYID']),
+                        'attr': datatree_attrs,
+                        'oper': datatree_opers,
+                    },{
+                        'outputWriters': graphite_writers,
+                        'obj': 'org.apache.ZooKeeperService:name0=ReplicatedServer_id{myid},name1=replica.{myid},name2=Follower'.format(myid=cont.env['ZOOKEEPER_MYID']),
+                        'attr': follower_attrs,
+                    }]
+                }],
+            })],
+        )],
+        memory=1024**2*512,
+    ) for cont in zookeepers]
