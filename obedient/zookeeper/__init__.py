@@ -1,6 +1,6 @@
 from pkg_resources import resource_string
 import os
-from dominator import *
+from dominator.entities import *
 
 def create(
     ships=[LocalShip()],
@@ -23,20 +23,43 @@ def create(
         ]
     )
 
-    image = Image(repository='yandex/zookeeper', tag='latest')
+    image = SourceImage(
+        name='zookeeper',
+        parent=Image('yandex/trusty'),
+        env={'DEBIAN_FRONTEND': 'noninteractive'},
+        scripts=[
+            'apt-get -qyy install openjdk-7-jre-headless -y',
+            'curl http://mirrors.sonic.net/apache/zookeeper/zookeeper-3.4.6/zookeeper-3.4.6.tar.gz | tar -C /opt -xz',
+            'mv -T /opt/zookeeper-* /opt/zookeeper',
+        ],
+        files={'/root/run.sh': 'run.sh'},
+        volumes={
+            'logs': '/var/log/zookeeper',
+            'data': '/var/lib/zookeeper',
+            'config': '/opt/zookeeper/conf',
+        },
+        ports={
+            'client': 2181,
+            'peer': 2888,
+            'election': 3888,
+            'jmx': 4888,
+        },
+        command='bash /root/run.sh',
+        workdir='/opt/zookeeper',
+    )
+    data = DataVolume('/var/lib/zookeeper')
+    logs = DataVolume('/var/log/zookeeper')
 
     containers.extend([
         Container(
             name='zookeeper',
             ship=ship,
             image=image,
-            volumes=[
-                DataVolume(
-                    dest='/var/lib/zookeeper',
-                    path='/var/lib/zookeeper',
-                ),
-                config,
-            ],
+            volumes={
+                'data': data,
+                'logs': logs,
+                'config': config,
+            },
             ports={'election': 3888, 'peer': 2888, 'client': 2181, 'jmx': 4888},
             memory=memory,
             env={
@@ -47,3 +70,58 @@ def create(
             },
         ) for myid, ship in enumerate(ships, 1)])
     return containers
+
+
+def create_jmxtrans(zookeepers, graphites):
+    graphite_writers = [{
+        '@class': 'com.googlecode.jmxtrans.model.output.GraphiteWriter',
+        'settings': graphite,
+    } for graphite in graphites]
+
+    datatree_attrs = ['NodeCount']
+    datatree_opers = [{
+        'method': 'countEphemerals',
+        'parameters': [],
+    }]
+    follower_attrs = [
+        'PacketsReceived',
+        'PacketsSent',
+        'NumAliveConnections',
+        'MaxRequestLatency',
+        'OutstandingRequests',
+        'PendingRevalidationCount',
+        'MaxClientCnxnsPerHost',
+        'MaxSessionTimeout',
+        'MinSessionTimeout',
+        'AvgRequestLatency',
+    ]
+
+    image = Image(repository='nikicat/jmxtrans', tag='latest')
+
+    return [Container(
+        name='zookeeper-jmxtrans',
+        ship=cont.ship,
+        image=image,
+        volumes={'config': ConfigVolume(
+            dest='/etc/jmxtrans',
+            files=[JsonFile('zookeeper.json',{
+                'servers': [{
+                    'host': cont.ship.fqdn,
+                    'port': cont.getport('jmx'),
+                    'alias': cont.ship.name,
+                    'numQueryThreads': 2,
+                    'queries': [{
+                        'outputWriters': graphite_writers,
+                        'obj': 'org.apache.ZooKeeperService:name0=ReplicatedServer_id{myid},name1=replica.{myid},name2=Follower,name3=InMemoryDataTree'.format(myid=cont.env['ZOOKEEPER_MYID']),
+                        'attr': datatree_attrs,
+                        'oper': datatree_opers,
+                    },{
+                        'outputWriters': graphite_writers,
+                        'obj': 'org.apache.ZooKeeperService:name0=ReplicatedServer_id{myid},name1=replica.{myid},name2=Follower'.format(myid=cont.env['ZOOKEEPER_MYID']),
+                        'attr': follower_attrs,
+                    }]
+                }],
+            })],
+        )},
+        memory=1024**2*512,
+    ) for cont in zookeepers]
