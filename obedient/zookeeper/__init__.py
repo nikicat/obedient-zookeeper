@@ -23,20 +23,43 @@ def create(
         ]
     )
 
-    image = Image(repository='yandex/zookeeper', tag='latest')
+    image = SourceImage(
+        name='zookeeper',
+        parent=Image('yandex/trusty'),
+        env={'DEBIAN_FRONTEND': 'noninteractive'},
+        scripts=[
+            'apt-get -qyy install openjdk-7-jre-headless -y',
+            'curl http://mirrors.sonic.net/apache/zookeeper/zookeeper-3.4.6/zookeeper-3.4.6.tar.gz | tar -C /opt -xz',
+            'mv -T /opt/zookeeper-* /opt/zookeeper',
+        ],
+        files={'/root/run.sh': 'run.sh'},
+        volumes={
+            'logs': '/var/log/zookeeper',
+            'data': '/var/lib/zookeeper',
+            'config': '/opt/zookeeper/conf',
+        },
+        ports={
+            'client': 2181,
+            'peer': 2888,
+            'election': 3888,
+            'jmx': 4888,
+        },
+        command='bash /root/run.sh',
+        workdir='/opt/zookeeper',
+    )
+    data = DataVolume('/var/lib/zookeeper')
+    logs = DataVolume('/var/log/zookeeper')
 
     containers.extend([
         Container(
             name='zookeeper',
             ship=ship,
             image=image,
-            volumes=[
-                DataVolume(
-                    dest='/var/lib/zookeeper',
-                    path='/var/lib/zookeeper',
-                ),
-                config,
-            ],
+            volumes={
+                'data': data,
+                'logs': logs,
+                'config': config,
+            },
             ports={'election': 3888, 'peer': 2888, 'client': 2181, 'jmx': 4888},
             memory=memory,
             env={
@@ -73,13 +96,13 @@ def create_jmxtrans(zookeepers, graphites):
         'AvgRequestLatency',
     ]
 
-    image = Image(repository='yandex/jmxtrans', tag='latest')
+    image = Image(repository='nikicat/jmxtrans', tag='latest')
 
     return [Container(
         name='zookeeper-jmxtrans',
         ship=cont.ship,
         image=image,
-        volumes=[ConfigVolume(
+        volumes={'config': ConfigVolume(
             dest='/etc/jmxtrans',
             files=[JsonFile('zookeeper.json',{
                 'servers': [{
@@ -99,6 +122,6 @@ def create_jmxtrans(zookeepers, graphites):
                     }]
                 }],
             })],
-        )],
+        )},
         memory=1024**2*512,
     ) for cont in zookeepers]
