@@ -12,15 +12,15 @@ def create(
 
     config = ConfigVolume(
         dest='/opt/zookeeper/conf',
-        files = [
-            TemplateFile(
+        files = {
+            'zoo.cfg': TemplateFile(
                 TextFile('zoo.cfg'),
                 containers=containers,
                 snap_count=snap_count,
                 global_outstanding_limit=global_outstanding_limit,
             ),
-            TextFile('log4j.properties'),
-        ]
+            'log4j.properties': TextFile('log4j.properties'),
+        }
     )
 
     image = SourceImage(
@@ -104,24 +104,26 @@ def create_jmxtrans(zookeepers, graphites):
         image=image,
         volumes={'config': ConfigVolume(
             dest='/etc/jmxtrans',
-            files=[JsonFile('zookeeper.json',{
-                'servers': [{
-                    'host': cont.ship.fqdn,
-                    'port': cont.getport('jmx'),
-                    'alias': cont.ship.name,
-                    'numQueryThreads': 2,
-                    'queries': [{
-                        'outputWriters': graphite_writers,
-                        'obj': 'org.apache.ZooKeeperService:name0=ReplicatedServer_id{myid},name1=replica.{myid},name2=Follower,name3=InMemoryDataTree'.format(myid=cont.env['ZOOKEEPER_MYID']),
-                        'attr': datatree_attrs,
-                        'oper': datatree_opers,
-                    },{
-                        'outputWriters': graphite_writers,
-                        'obj': 'org.apache.ZooKeeperService:name0=ReplicatedServer_id{myid},name1=replica.{myid},name2=Follower'.format(myid=cont.env['ZOOKEEPER_MYID']),
-                        'attr': follower_attrs,
-                    }]
-                }],
-            })],
+            files={
+                'zookeeper.json': JsonFile({
+                    'servers': [{
+                        'host': cont.ship.fqdn,
+                        'port': cont.getport('jmx'),
+                        'alias': cont.ship.name,
+                        'numQueryThreads': 2,
+                        'queries': [{
+                            'outputWriters': graphite_writers,
+                            'obj': 'org.apache.ZooKeeperService:name0=ReplicatedServer_id{myid},name1=replica.{myid},name2=Follower,name3=InMemoryDataTree'.format(myid=cont.env['ZOOKEEPER_MYID']),
+                            'attr': datatree_attrs,
+                            'oper': datatree_opers,
+                        },{
+                            'outputWriters': graphite_writers,
+                            'obj': 'org.apache.ZooKeeperService:name0=ReplicatedServer_id{myid},name1=replica.{myid},name2=Follower'.format(myid=cont.env['ZOOKEEPER_MYID']),
+                            'attr': follower_attrs,
+                        }]
+                    }],
+                }),
+            },
         )},
         memory=1024**2*512,
     ) for cont in zookeepers]
