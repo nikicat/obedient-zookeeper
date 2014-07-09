@@ -29,8 +29,7 @@ def create(
         env={'DEBIAN_FRONTEND': 'noninteractive'},
         scripts=[
             'apt-get -qyy install openjdk-7-jre-headless -y',
-            'curl http://mirrors.sonic.net/apache/zookeeper/zookeeper-3.4.6/zookeeper-3.4.6.tar.gz | tar -C /opt -xz',
-            'mv -T /opt/zookeeper-* /opt/zookeeper',
+            'curl http://mirrors.sonic.net/apache/zookeeper/zookeeper-3.4.6/zookeeper-3.4.6.tar.gz | tar --strip-components=1 -xz',
         ],
         files={'/root/run.sh': 'run.sh'},
         volumes={
