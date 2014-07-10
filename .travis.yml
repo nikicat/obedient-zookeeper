@@ -8,7 +8,7 @@ env:
   global:
     secure: NcXEN0Nw82Pin8AA8VVWp/hIwBOKqZ8ma3LymixPKzVuA1wuBrsQvf4E0JxABK8w2YyWgZWyo/LdINK8FD2RYpfQ5fXQdfZGOPf7W19hg9X6kWnUboekHQyOD5v+uPbdmD2pkKFKj8XcKno1z0wdvVF891o89/4bzl/YDeH6Hvk=
 install:
-- pip install tox
+- pip install tox bumpversion
 script: tox -v
 before_deploy:
 - git checkout master
@@ -25,7 +25,7 @@ deploy:
   provider: pypi
   user: nikicat
   password:
-    secure: i9zNWTqaqWjKp4hHVXA0wWvCFS5ic7ne3nc6WP7fanQLC5y1/tQxsnmMVN02aThfpNoCZKh82rWjs/wXXxUq5Q4egXFaOjMPoyIsb8EGHFi4y1FMW/wSnw/iBXFYruWf/k+JQz2t+dj1/EpHj4sLGMPRjANdK2+fwrDFNIlUIBs=
+    secure: h/FOeMhL86Rs/SRUR9CQh7y1JKLO3qUrepVYi0rPyms/1RK2BlTERDrCMlTwZT+gkb5N5A3c02Fj1MyWEXFjr8aPZ7vsIKMkb+iTNet5Pgioaep4EwN+iUvAd9zWi3bLvuCahxoX0Vvarflt0O9dxO+m2CpHeQ9YW14OxaopXtc=
   distributions: sdist
   on:
     condition: "$TOXENV = flake8"
@@ -33,4 +33,4 @@ deploy:
 notifications:
   hipchat:
     rooms:
-      secure: PafUqqru2uzvMt+lMC6zjHNskguNbvK6o8P2ChjlZ9pEqs0UNRH8gRQGAQKErRfC1baUrjz2zjfqdXFvQUIIYZS9X6h9GXReX+wfaU9/ZTCL4e/TDaauXIyVKTjSgmMsk2N9XkorDHexkrHDFOENbU5YWABbnuOcXcYTEJ/VhvM=
+      secure: iBo0D+ux1X87cnp56Gz3dh8HZvxgmDPYGJiBQupv8oFlpNwp8i5yBmEi++wDbczGBua9MJR3g/7hP/5b186JeigB3Xdhb5uh493ToOL54SSPVAbBki1lAlrESe2wZq7oH4UpBzP+QVhrzwhX0loF23ZC0Ps3Eo9cr6cURycNO/o=
