@@ -1,6 +1,7 @@
-from pkg_resources import resource_string
 import os
-from dominator.entities import *
+from dominator.entities import (LocalShip, SourceImage, Image, ConfigVolume, DataVolume,
+                                Container, TemplateFile, TextFile, JsonFile)
+
 
 def create(
     ships=[LocalShip()],
@@ -12,7 +13,7 @@ def create(
 
     config = ConfigVolume(
         dest='/opt/zookeeper/conf',
-        files = {
+        files={
             'zoo.cfg': TemplateFile(
                 TextFile('zoo.cfg'),
                 containers=containers,
@@ -29,7 +30,8 @@ def create(
         env={'DEBIAN_FRONTEND': 'noninteractive'},
         scripts=[
             'apt-get -qyy install openjdk-7-jre-headless -y',
-            'curl http://mirrors.sonic.net/apache/zookeeper/zookeeper-3.4.6/zookeeper-3.4.6.tar.gz | tar --strip-components=1 -xz',
+            'curl http://mirrors.sonic.net/apache/zookeeper/zookeeper-3.4.6/zookeeper-3.4.6.tar.gz'
+            ' | tar --strip-components=1 -xz',
         ],
         files={'/root/run.sh': 'run.sh'},
         volumes={
@@ -112,12 +114,14 @@ def create_jmxtrans(zookeepers, graphites):
                         'numQueryThreads': 2,
                         'queries': [{
                             'outputWriters': graphite_writers,
-                            'obj': 'org.apache.ZooKeeperService:name0=ReplicatedServer_id{myid},name1=replica.{myid},name2=Follower,name3=InMemoryDataTree'.format(myid=cont.env['ZOOKEEPER_MYID']),
+                            'obj': 'org.apache.ZooKeeperService:name0=ReplicatedServer_id{myid},name1=replica.{myid},'
+                                   'name2=Follower,name3=InMemoryDataTree'.format(myid=cont.env['ZOOKEEPER_MYID']),
                             'attr': datatree_attrs,
                             'oper': datatree_opers,
-                        },{
+                        }, {
                             'outputWriters': graphite_writers,
-                            'obj': 'org.apache.ZooKeeperService:name0=ReplicatedServer_id{myid},name1=replica.{myid},name2=Follower'.format(myid=cont.env['ZOOKEEPER_MYID']),
+                            'obj': 'org.apache.ZooKeeperService:name0=ReplicatedServer_id{myid},name1=replica.{myid},'
+                                   'name2=Follower'.format(myid=cont.env['ZOOKEEPER_MYID']),
                             'attr': follower_attrs,
                         }]
                     }],
