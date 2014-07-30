@@ -5,31 +5,9 @@ env:
   matrix:
   - TOXENV=flake8
   - TOXENV=pylint
-  global:
-    secure: NcXEN0Nw82Pin8AA8VVWp/hIwBOKqZ8ma3LymixPKzVuA1wuBrsQvf4E0JxABK8w2YyWgZWyo/LdINK8FD2RYpfQ5fXQdfZGOPf7W19hg9X6kWnUboekHQyOD5v+uPbdmD2pkKFKj8XcKno1z0wdvVF891o89/4bzl/YDeH6Hvk=
 install:
 - pip install tox bumpversion
 script: tox -v
-before_deploy:
-- git checkout master
-- git config user.email "travisbot@travis-ci.org"
-- git config user.name "Travis-CI Bot"
-- (git log -1 --pretty=%B | grep 'Merge pull request') && bumpversion --verbose minor || true
-- git remote remove origin
-- git remote add origin git@github.com:yandex-sysmon/obedient-zookeeper
-- openssl rsa -in .deploy.pem -passin env:DEPLOYKEYPASS >> ~/.ssh/id_rsa
-- chmod 0600 ~/.ssh/id_rsa
-- git push origin master
-- git push --tags --force
-deploy:
-  provider: pypi
-  user: nikicat
-  password:
-    secure: h/FOeMhL86Rs/SRUR9CQh7y1JKLO3qUrepVYi0rPyms/1RK2BlTERDrCMlTwZT+gkb5N5A3c02Fj1MyWEXFjr8aPZ7vsIKMkb+iTNet5Pgioaep4EwN+iUvAd9zWi3bLvuCahxoX0Vvarflt0O9dxO+m2CpHeQ9YW14OxaopXtc=
-  distributions: sdist
-  on:
-    condition: "$TOXENV = flake8"
-    repo: yandex-sysmon/obedient-zookeeper
 notifications:
   hipchat:
     rooms:
