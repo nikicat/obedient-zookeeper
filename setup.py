@@ -5,7 +5,7 @@ if __name__ == '__main__':
         name='obedient.zookeeper',
         version='1.2',
         url='https://github.com/yandex-sysmon/obedient.zookeeper',
-        license='GPLv3',
+        license='LGPLv3',
         author='Nikolay Bryskin',
         author_email='devel.niks@gmail.com',
         description='Zookeeper obedient for Dominator',
