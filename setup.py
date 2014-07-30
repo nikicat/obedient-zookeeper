@@ -4,7 +4,7 @@ if __name__ == '__main__':
     setuptools.setup(
         name='obedient.zookeeper',
         version='1.2',
-        url='https://github.com/yandex-sysmon/obedient-zookeeper',
+        url='https://github.com/yandex-sysmon/obedient.zookeeper',
         license='GPLv3',
         author='Nikolay Bryskin',
         author_email='devel.niks@gmail.com',
