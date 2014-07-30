@@ -3,7 +3,7 @@ import setuptools
 if __name__ == '__main__':
     setuptools.setup(
         name='obedient.zookeeper',
-        version='1.1',
+        version='1.2',
         url='https://github.com/yandex-sysmon/obedient-zookeeper',
         license='GPLv3',
         author='Nikolay Bryskin',
