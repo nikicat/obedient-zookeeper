@@ -8,6 +8,7 @@ def create(
     memory=1024**3,
     snap_count=os.environ.get('OBEDIENT_ZOOKEEPER_SNAP_COUNT', 10000),
     global_outstanding_limit=os.environ.get('OBEDIENT_ZOOKEEPER_GLOBAL_OUTSTANDING_LIMIT', 1000),
+    ports=None,
 ):
     containers = []
 
@@ -30,7 +31,7 @@ def create(
         env={'DEBIAN_FRONTEND': 'noninteractive'},
         scripts=[
             'apt-get -qyy install openjdk-7-jre-headless -y',
-            'curl http://mirrors.sonic.net/apache/zookeeper/zookeeper-3.4.6/zookeeper-3.4.6.tar.gz'
+            'curl -s http://mirrors.sonic.net/apache/zookeeper/zookeeper-3.4.6/zookeeper-3.4.6.tar.gz'
             ' | tar --strip-components=1 -xz',
         ],
         files={'/root/run.sh': 'run.sh'},
@@ -62,6 +63,7 @@ def create(
                 'config': config,
             },
             ports={'election': 3888, 'peer': 2888, 'client': 2181, 'jmx': 4888},
+            extports=ports,
             memory=memory,
             env={
                 'JAVA_OPTS': '-Xmx700m',
