@@ -30,6 +30,7 @@ def create(
         parent=Image('yandex/trusty'),
         env={'DEBIAN_FRONTEND': 'noninteractive'},
         scripts=[
+            'apt-get -q update',
             'apt-get -qyy install openjdk-7-jre-headless -y',
             'curl -s http://mirrors.sonic.net/apache/zookeeper/zookeeper-3.4.6/zookeeper-3.4.6.tar.gz'
             ' | tar --strip-components=1 -xz',
