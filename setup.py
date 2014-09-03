@@ -13,5 +13,5 @@ if __name__ == '__main__':
         packages=['obedient.zookeeper'],
         namespace_packages=['obedient'],
         package_data={'obedient.zookeeper': ['log4j.properties', 'myid', 'zoo.cfg', 'run.sh']},
-        install_requires=['dominator[full] >=4'],
+        install_requires=['dominator[full] >=7'],
     )
