@@ -27,7 +27,7 @@ def create(
 
     image = SourceImage(
         name='zookeeper',
-        parent=Image('yandex/trusty'),
+        parent=Image(namespace='yandex', repository='trusty'),
         env={'DEBIAN_FRONTEND': 'noninteractive'},
         scripts=[
             'apt-get -q update',
@@ -100,7 +100,7 @@ def create_jmxtrans(zookeepers, graphites):
         'AvgRequestLatency',
     ]
 
-    image = Image(repository='nikicat/jmxtrans', tag='latest')
+    image = Image(namespace='nikicat', repository='jmxtrans', tag='latest')
 
     return [Container(
         name='zookeeper-jmxtrans',
