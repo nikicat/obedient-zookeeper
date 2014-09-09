@@ -52,7 +52,8 @@ def create(
         workdir='/opt/zookeeper',
     )
     data = DataVolume('/var/lib/zookeeper')
-    logs = LogVolume('/var/log/zookeeper',
+    logs = LogVolume(
+        '/var/log/zookeeper',
         logs={
             'zookeeper.log': RotatedLogFile(format='%Y-%m-%d %H:%M:%S,%f', length=23),
         },
