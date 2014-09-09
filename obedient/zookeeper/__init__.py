@@ -1,6 +1,7 @@
 import os
-from dominator.entities import (LocalShip, SourceImage, Image, ConfigVolume, DataVolume,
-                                Container, TemplateFile, TextFile, JsonFile)
+from dominator.utils import resource_string
+from dominator.entities import (LocalShip, SourceImage, Image, ConfigVolume, DataVolume, LogVolume,
+                                Container, TemplateFile, TextFile, JsonFile, RotatedLogFile, LogFile)
 
 
 def create(
@@ -35,7 +36,7 @@ def create(
             'curl -s http://mirrors.sonic.net/apache/zookeeper/zookeeper-3.4.6/zookeeper-3.4.6.tar.gz'
             ' | tar --strip-components=1 -xz',
         ],
-        files={'/root/run.sh': 'run.sh'},
+        files={'/root/run.sh': resource_string('run.sh')},
         volumes={
             'logs': '/var/log/zookeeper',
             'data': '/var/lib/zookeeper',
@@ -51,7 +52,12 @@ def create(
         workdir='/opt/zookeeper',
     )
     data = DataVolume('/var/lib/zookeeper')
-    logs = DataVolume('/var/log/zookeeper')
+    logs = LogVolume(
+        '/var/log/zookeeper',
+        logs={
+            'zookeeper.log': RotatedLogFile(format='%Y-%m-%d %H:%M:%S,%f', length=23),
+        },
+    )
 
     containers.extend([
         Container(
@@ -67,7 +73,7 @@ def create(
             extports=ports,
             memory=memory,
             env={
-                'JAVA_OPTS': '-Xmx700m',
+                'JAVA_OPTS': '-Xmx{}'.format(memory*3//4),
                 'JAVA_RMI_SERVER_HOSTNAME': ship.fqdn,
                 'VISUALVM_DISPLAY_NAME': '{}-{}'.format(ship.name, 'zookeeper'),
                 'ZOOKEEPER_MYID': str(myid),
@@ -100,36 +106,69 @@ def create_jmxtrans(zookeepers, graphites):
         'AvgRequestLatency',
     ]
 
-    image = Image(namespace='nikicat', repository='jmxtrans', tag='latest')
+    config_dest = '/etc/jmxtrans'
+
+    logs_volume = LogVolume(
+        dest='/var/log/jmxtrans',
+        logs={
+            'jmxtrans.log': LogFile(),
+        },
+    )
+
+    image = SourceImage(
+        name='jmxtrans',
+        parent=Image(namespace='yandex', repository='trusty'),
+        scripts=[
+            'apt-get install -yy openjdk-7-jdk maven && apt-get clean',
+            'git clone https://github.com/Naishy/jmxtrans.git',
+            'cd jmxtrans && mvn install',
+        ],
+        files={
+            '/root/run.sh': resource_string('jmxtrans.run.sh'),
+        },
+        volumes={
+            'config': config_dest,
+            'logs': logs_volume.dest,
+        },
+        command='bash /root/run/sh',
+    )
 
     return [Container(
         name='zookeeper-jmxtrans',
         ship=cont.ship,
         image=image,
-        volumes={'config': ConfigVolume(
-            dest='/etc/jmxtrans',
-            files={
-                'zookeeper.json': JsonFile({
-                    'servers': [{
-                        'host': cont.ship.fqdn,
-                        'port': cont.getport('jmx'),
-                        'alias': cont.ship.name,
-                        'numQueryThreads': 2,
-                        'queries': [{
-                            'outputWriters': graphite_writers,
-                            'obj': 'org.apache.ZooKeeperService:name0=ReplicatedServer_id{myid},name1=replica.{myid},'
-                                   'name2=Follower,name3=InMemoryDataTree'.format(myid=cont.env['ZOOKEEPER_MYID']),
-                            'attr': datatree_attrs,
-                            'oper': datatree_opers,
-                        }, {
-                            'outputWriters': graphite_writers,
-                            'obj': 'org.apache.ZooKeeperService:name0=ReplicatedServer_id{myid},name1=replica.{myid},'
-                                   'name2=Follower'.format(myid=cont.env['ZOOKEEPER_MYID']),
-                            'attr': follower_attrs,
-                        }]
-                    }],
-                }),
-            },
-        )},
+        volumes={
+            'config': ConfigVolume(
+                dest=config_dest,
+                files={
+                    'zookeeper.json': JsonFile({
+                        'servers': [{
+                            'host': cont.ship.fqdn,
+                            'port': cont.getport('jmx'),
+                            'alias': cont.ship.name,
+                            'numQueryThreads': 2,
+                            'queries': [{
+                                'outputWriters': graphite_writers,
+                                'obj': 'org.apache.ZooKeeperService:'
+                                       'name0=ReplicatedServer_id{myid},'
+                                       'name1=replica.{myid},'
+                                       'name2=Follower,'
+                                       'name3=InMemoryDataTree'.format(myid=cont.env['ZOOKEEPER_MYID']),
+                                'attr': datatree_attrs,
+                                'oper': datatree_opers,
+                            }, {
+                                'outputWriters': graphite_writers,
+                                'obj': 'org.apache.ZooKeeperService:'
+                                       'name0=ReplicatedServer_id{myid},'
+                                       'name1=replica.{myid},'
+                                       'name2=Follower'.format(myid=cont.env['ZOOKEEPER_MYID']),
+                                'attr': follower_attrs,
+                            }]
+                        }],
+                    }),
+                },
+            ),
+            'logs': logs_volume,
+        },
         memory=1024**2*512,
     ) for cont in zookeepers]
