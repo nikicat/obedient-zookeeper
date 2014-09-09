@@ -1,6 +1,7 @@
 import os
-from dominator.entities import (LocalShip, SourceImage, Image, ConfigVolume, DataVolume,
-                                Container, TemplateFile, TextFile, JsonFile)
+from dominator.utils import resource_string
+from dominator.entities import (LocalShip, SourceImage, Image, ConfigVolume, DataVolume, LogVolume,
+                                Container, TemplateFile, TextFile, JsonFile, RotatedLogFile)
 
 
 def create(
@@ -35,7 +36,7 @@ def create(
             'curl -s http://mirrors.sonic.net/apache/zookeeper/zookeeper-3.4.6/zookeeper-3.4.6.tar.gz'
             ' | tar --strip-components=1 -xz',
         ],
-        files={'/root/run.sh': 'run.sh'},
+        files={'/root/run.sh': resource_string('run.sh')},
         volumes={
             'logs': '/var/log/zookeeper',
             'data': '/var/lib/zookeeper',
@@ -51,7 +52,11 @@ def create(
         workdir='/opt/zookeeper',
     )
     data = DataVolume('/var/lib/zookeeper')
-    logs = DataVolume('/var/log/zookeeper')
+    logs = LogVolume('/var/log/zookeeper',
+        logs={
+            'zookeeper.log': RotatedLogFile(format='%Y-%m-%d %H:%M:%S,%f', length=23),
+        },
+    )
 
     containers.extend([
         Container(
@@ -67,7 +72,7 @@ def create(
             extports=ports,
             memory=memory,
             env={
-                'JAVA_OPTS': '-Xmx700m',
+                'JAVA_OPTS': '-Xmx{}'.format(memory*3//4),
                 'JAVA_RMI_SERVER_HOSTNAME': ship.fqdn,
                 'VISUALVM_DISPLAY_NAME': '{}-{}'.format(ship.name, 'zookeeper'),
                 'ZOOKEEPER_MYID': str(myid),
