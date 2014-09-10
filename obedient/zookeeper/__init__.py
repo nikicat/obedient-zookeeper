@@ -130,7 +130,7 @@ def create_jmxtrans(zookeepers, graphites):
             'config': config_dest,
             'logs': logs_volume.dest,
         },
-        command='bash /root/run/sh',
+        command='bash /root/run.sh',
     )
 
     return [Container(
