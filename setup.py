@@ -12,6 +12,12 @@ if __name__ == '__main__':
         platforms='linux',
         packages=['obedient.zookeeper'],
         namespace_packages=['obedient'],
-        package_data={'obedient.zookeeper': ['log4j.properties', 'myid', 'zoo.cfg', 'run.sh']},
+        package_data={'obedient.zookeeper': [
+            'log4j.properties',
+            'myid',
+            'zoo.cfg',
+            'run.sh',
+            'jmxtrans.run.sh',
+        ]},
         install_requires=['dominator[full] >=8.1'],
     )
