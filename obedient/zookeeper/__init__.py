@@ -2,7 +2,7 @@ import os
 from dominator.utils import resource_string
 from dominator.entities import (LocalShip, SourceImage, Image, ConfigVolume, DataVolume, LogVolume,
                                 Container, TemplateFile, TextFile, JsonFile, RotatedLogFile, LogFile,
-                                Shipment, Interface)
+                                Shipment, Door)
 
 
 def create(
@@ -71,12 +71,12 @@ def create(
                 'logs': logs,
                 'config': config,
             },
-            interfaces={
-                'election': Interface(schema='zookeeper-election', port=image.ports['election'],
-                                      externalport=ports.get('election')),
-                'peer': Interface(schema='zookeeper-peer', port=image.ports['peer'], externalport=ports.get('peer')),
-                'client': Interface(schema='zookeeper', port=image.ports['client'], externalport=ports.get('client')),
-                'jmx': Interface(schema='rmi', port=image.ports['jmx'], externalport=ports.get('jmx')),
+            doors={
+                'election': Door(schema='zookeeper-election', port=image.ports['election'],
+                                 externalport=ports.get('election')),
+                'peer': Door(schema='zookeeper-peer', port=image.ports['peer'], externalport=ports.get('peer')),
+                'client': Door(schema='zookeeper', port=image.ports['client'], externalport=ports.get('client')),
+                'jmx': Door(schema='rmi', port=image.ports['jmx'], externalport=ports.get('jmx')),
             },
             memory=memory,
             env={
@@ -151,7 +151,7 @@ def create_jmxtrans(zookeepers, graphites):
                     'zookeeper.json': JsonFile({
                         'servers': [{
                             'host': cont.ship.fqdn,
-                            'port': cont.interfaces['jmx'].externalport,
+                            'port': cont.door['jmx'].externalport,
                             'alias': cont.ship.name,
                             'numQueryThreads': 2,
                             'queries': [{
