@@ -1,23 +1,25 @@
 import os
 from dominator.utils import resource_string
 from dominator.entities import (LocalShip, SourceImage, Image, ConfigVolume, DataVolume, LogVolume,
-                                Container, TemplateFile, TextFile, JsonFile, RotatedLogFile, LogFile)
+                                Container, TemplateFile, TextFile, JsonFile, RotatedLogFile, LogFile,
+                                Shipment, Door)
 
 
 def create(
-    ships=[LocalShip()],
+    ships,
     memory=1024**3,
     snap_count=os.environ.get('OBEDIENT_ZOOKEEPER_SNAP_COUNT', 10000),
     global_outstanding_limit=os.environ.get('OBEDIENT_ZOOKEEPER_GLOBAL_OUTSTANDING_LIMIT', 1000),
     ports=None,
 ):
     containers = []
+    ports = ports or {}
 
     config = ConfigVolume(
         dest='/opt/zookeeper/conf',
         files={
             'zoo.cfg': TemplateFile(
-                TextFile('zoo.cfg'),
+                resource_string('zoo.cfg'),
                 containers=containers,
                 snap_count=snap_count,
                 global_outstanding_limit=global_outstanding_limit,
@@ -54,7 +56,7 @@ def create(
     data = DataVolume('/var/lib/zookeeper')
     logs = LogVolume(
         '/var/log/zookeeper',
-        logs={
+        files={
             'zookeeper.log': RotatedLogFile(format='%Y-%m-%d %H:%M:%S,%f', length=23),
         },
     )
@@ -69,8 +71,13 @@ def create(
                 'logs': logs,
                 'config': config,
             },
-            ports={'election': 3888, 'peer': 2888, 'client': 2181, 'jmx': 4888},
-            extports=ports,
+            doors={
+                'election': Door(schema='zookeeper-election', port=image.ports['election'],
+                                 externalport=ports.get('election')),
+                'peer': Door(schema='zookeeper-peer', port=image.ports['peer'], externalport=ports.get('peer')),
+                'client': Door(schema='zookeeper', port=image.ports['client'], externalport=ports.get('client')),
+                'jmx': Door(schema='rmi', port=image.ports['jmx'], externalport=ports.get('jmx')),
+            },
             memory=memory,
             env={
                 'JAVA_OPTS': '-Xmx{}'.format(memory*3//4),
@@ -110,7 +117,7 @@ def create_jmxtrans(zookeepers, graphites):
 
     logs_volume = LogVolume(
         dest='/var/log/jmxtrans',
-        logs={
+        files={
             'jmxtrans.log': LogFile(),
         },
     )
@@ -144,7 +151,7 @@ def create_jmxtrans(zookeepers, graphites):
                     'zookeeper.json': JsonFile({
                         'servers': [{
                             'host': cont.ship.fqdn,
-                            'port': cont.getport('jmx'),
+                            'port': cont.door['jmx'].externalport,
                             'alias': cont.ship.name,
                             'numQueryThreads': 2,
                             'queries': [{
@@ -172,3 +179,7 @@ def create_jmxtrans(zookeepers, graphites):
         },
         memory=1024**2*512,
     ) for cont in zookeepers]
+
+
+def make_local():
+    return Shipment('local', create(ships=[LocalShip()]))

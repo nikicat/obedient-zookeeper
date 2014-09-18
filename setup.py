@@ -3,7 +3,7 @@ import setuptools
 if __name__ == '__main__':
     setuptools.setup(
         name='obedient.zookeeper',
-        version='1.4.0',
+        version='1.5.0',
         url='https://github.com/yandex-sysmon/obedient.zookeeper',
         license='LGPLv3',
         author='Nikolay Bryskin',
@@ -19,5 +19,8 @@ if __name__ == '__main__':
             'run.sh',
             'jmxtrans.run.sh',
         ]},
-        install_requires=['dominator[full] >=8.1'],
+        entry_points={'obedient': [
+            'local = obedient.zookeeper:make_local',
+        ]},
+        install_requires=['dominator[full] >=9.1'],
     )
