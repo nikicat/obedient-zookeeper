@@ -151,7 +151,7 @@ def create_jmxtrans(zookeepers, graphites):
                     'zookeeper.json': JsonFile({
                         'servers': [{
                             'host': cont.ship.fqdn,
-                            'port': cont.door['jmx'].externalport,
+                            'port': cont.doors['jmx'].externalport,
                             'alias': cont.ship.name,
                             'numQueryThreads': 2,
                             'queries': [{
