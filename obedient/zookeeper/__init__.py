@@ -35,6 +35,7 @@ def create(
         scripts=[
             'apt-get -q update',
             'apt-get -qyy install openjdk-7-jre-headless -y',
+            'apt-get clean',
             'curl -s http://mirrors.sonic.net/apache/zookeeper/zookeeper-3.4.6/zookeeper-3.4.6.tar.gz'
             ' | tar --strip-components=1 -xz',
         ],
@@ -126,7 +127,9 @@ def create_jmxtrans(zookeepers, graphites):
         name='jmxtrans',
         parent=Image(namespace='yandex', repository='trusty'),
         scripts=[
-            'apt-get install -yy openjdk-7-jdk maven && apt-get clean',
+            'apt-get -q update',
+            'apt-get -qyy install openjdk-7-jdk maven -y',
+            'apt-get clean',
             'git clone https://github.com/Naishy/jmxtrans.git',
             'cd jmxtrans && mvn install',
         ],
