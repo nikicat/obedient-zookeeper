@@ -24,7 +24,7 @@ def create(
                 snap_count=snap_count,
                 global_outstanding_limit=global_outstanding_limit,
             ),
-            'log4j.properties': TextFile('log4j.properties'),
+            'log4j.properties': TextFile(filename='log4j.properties'),
         }
     )
 
