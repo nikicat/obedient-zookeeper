@@ -14,13 +14,11 @@ if __name__ == '__main__':
         namespace_packages=['obedient'],
         package_data={'obedient.zookeeper': [
             'log4j.properties',
-            'myid',
-            'zoo.cfg',
             'run.sh',
             'jmxtrans.run.sh',
         ]},
         entry_points={'obedient': [
             'local = obedient.zookeeper:make_local',
         ]},
-        install_requires=['dominator[full] >=9.1'],
+        install_requires=['dominator[full] >=11'],
     )
