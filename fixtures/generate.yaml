@@ -1,0 +1,38 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.4.1 CPython/3.4.1 Linux/3.15.7-1-aufs_friendly]
+    method: GET
+    uri: http://localhost:4243/v1.12/images/json?filter=registry.ape.yandex.net%2Fyandex%2Ftrusty&all=1&only_ids=0
+  response:
+    body: {string: '[{"Created":1412241276,"Id":"c8243f012ff5abd2a7cbbe1d003e7ba7917216c971ea7f20599b12df4c7cf1a4","ParentId":"74506ab1c88faeab56c42666f43704f5a24fbb70a2c570f58a85840a6c3c84b5","RepoTags":["registry.ape.yandex.net/yandex/trusty:latest"],"Size":0,"VirtualSize":742236242}
+
+        ]'}
+    headers:
+      Content-Length: ['268']
+      Content-Type: [application/json]
+      Date: ['Fri, 03 Oct 2014 14:02:11 GMT']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.4.1 CPython/3.4.1 Linux/3.15.7-1-aufs_friendly]
+    method: GET
+    uri: http://localhost:4243/v1.12/images/json?filter=registry.ape.yandex.net%2Fyandex%2Ftrusty&all=1&only_ids=0
+  response:
+    body: {string: '[{"Created":1412241276,"Id":"c8243f012ff5abd2a7cbbe1d003e7ba7917216c971ea7f20599b12df4c7cf1a4","ParentId":"74506ab1c88faeab56c42666f43704f5a24fbb70a2c570f58a85840a6c3c84b5","RepoTags":["registry.ape.yandex.net/yandex/trusty:latest"],"Size":0,"VirtualSize":742236242}
+
+        ]'}
+    headers:
+      Content-Length: ['268']
+      Content-Type: [application/json]
+      Date: ['Fri, 03 Oct 2014 14:02:11 GMT']
+    status: {code: 200, message: OK}
+version: 1

@@ -20,5 +20,5 @@ if __name__ == '__main__':
         entry_points={'obedient': [
             'local = obedient.zookeeper:make_local',
         ]},
-        install_requires=['dominator[full] >=11'],
+        install_requires=['dominator[full] >=11.2.1'],
     )
