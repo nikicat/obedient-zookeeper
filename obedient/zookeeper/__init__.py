@@ -1,5 +1,3 @@
-import os
-
 from dominator.utils import resource_string, cached
 from dominator.entities import (LocalShip, SourceImage, Image, ConfigVolume, DataVolume, LogVolume,
                                 Container, TextFile, JsonFile, IniFile, RotatedLogFile, LogFile,
@@ -37,8 +35,9 @@ def get_zookeeper_image():
 
 def create_zookeeper(
     memory=1024**3,
-    snap_count=os.environ.get('OBEDIENT_ZOOKEEPER_SNAP_COUNT', 10000),
-    global_outstanding_limit=os.environ.get('OBEDIENT_ZOOKEEPER_GLOBAL_OUTSTANDING_LIMIT', 1000),
+    snap_count=10000,
+    global_outstanding_limit=1000,
+    max_client_connections=0,
 ):
     image = get_zookeeper_image()
     data = DataVolume(dest=image.volumes['data'])
@@ -84,6 +83,7 @@ def create_zookeeper(
             'autopurge.purgeInterval': 1,
             'snapCount': snap_count,
             'globalOutstandingLimit': global_outstanding_limit,
+            'maxClientCnxns': max_client_connections,
         }
         for peerid, (peer, election) in container.links.items():
             assert peer.container == election.container, "peer and election doors should be on the same container"
