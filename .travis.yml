@@ -5,6 +5,7 @@ env:
   matrix:
   - TOXENV=flake8
   - TOXENV=pylint
+  - TOXENV=dominator
 install:
 - pip install tox bumpversion
 script: tox -v

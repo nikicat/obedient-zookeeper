@@ -3,7 +3,7 @@ import setuptools
 if __name__ == '__main__':
     setuptools.setup(
         name='obedient.zookeeper',
-        version='1.6.0',
+        version='2.0.0',
         url='https://github.com/yandex-sysmon/obedient.zookeeper',
         license='LGPLv3',
         author='Nikolay Bryskin',
@@ -14,13 +14,11 @@ if __name__ == '__main__':
         namespace_packages=['obedient'],
         package_data={'obedient.zookeeper': [
             'log4j.properties',
-            'myid',
-            'zoo.cfg',
             'run.sh',
             'jmxtrans.run.sh',
         ]},
         entry_points={'obedient': [
             'local = obedient.zookeeper:make_local',
         ]},
-        install_requires=['dominator[full] >=9.1'],
+        install_requires=['dominator[full] >=11.2.1'],
     )
