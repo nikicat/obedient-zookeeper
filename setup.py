@@ -18,7 +18,7 @@ if __name__ == '__main__':
             'jmxtrans.run.sh',
         ]},
         entry_points={'obedient': [
-            'local = obedient.zookeeper:make_local',
+            'create = obedient.zookeeper:create',
         ]},
-        install_requires=['dominator[full] >=11.2.1'],
+        install_requires=['dominator[full] >=12'],
     )

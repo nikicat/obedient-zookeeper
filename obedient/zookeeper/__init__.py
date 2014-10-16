@@ -1,7 +1,6 @@
 from dominator.utils import resource_string, cached
-from dominator.entities import (LocalShip, SourceImage, Image, ConfigVolume, DataVolume, LogVolume,
-                                Container, TextFile, JsonFile, IniFile, RotatedLogFile, LogFile,
-                                Shipment, Door)
+from dominator.entities import (SourceImage, Image, ConfigVolume, DataVolume, LogVolume, Door,
+                                Container, TextFile, JsonFile, IniFile, RotatedLogFile, LogFile)
 
 
 @cached
@@ -123,7 +122,7 @@ def create_zookeeper(
             '-Dvisualvm.display.name': container.fullname,
         }
 
-        jvmflags = arguments + ['{}={}'.format(key, value) for key, value in options.items()]
+        jvmflags = arguments + ['{}={}'.format(key, value) for key, value in sorted(options.items())]
         return TextFile('export JVMFLAGS="{}"'.format(' '.join(sorted(jvmflags))))
 
     container.volumes['config'].files['zoo.cfg'] = make_zoo_cfg
@@ -245,26 +244,23 @@ def create_jmxtrans():
     return jmxtrans
 
 
-def make_local(count=1):
-    ship = LocalShip()
+def test(shipment, count):
+    shipment.unload_ships()
     zookeepers = []
-    jmxtranses = []
-    for i in range(count):
-        zookeeper = create_zookeeper()
-        zookeeper.name = '{}-{}'.format(zookeeper.name, i)
-        ship.place(zookeeper)
-        zookeeper.doors['client'].expose(52181+i)
-        zookeepers.append(zookeeper)
+    for shipnum, ship in enumerate(shipment.ships.values()):
+        for i in range(count):
+            zookeeper = create_zookeeper()
+            zookeeper.name = '{}-{}'.format(zookeeper.name, i)
+            ship.place(zookeeper)
+            zookeeper.doors['client'].expose(52181+i)
+            zookeepers.append(zookeeper)
 
-        jmxtrans = create_jmxtrans()
-        jmxtrans.name = '{}-{}'.format(jmxtrans.name, i)
-        jmxtrans.links['zookeeper'] = zookeeper.doors['jmx']
-        jmxtrans.links['graphites'] = []
-        ship.place(jmxtrans)
-        jmxtranses.append(jmxtrans)
+            jmxtrans = create_jmxtrans()
+            jmxtrans.name = '{}-{}'.format(jmxtrans.name, i)
+            jmxtrans.links['zookeeper'] = zookeeper.doors['jmx']
+            jmxtrans.links['graphites'] = []
+            ship.place(jmxtrans)
+
+    shipment.expose_ports(range(50000, 50100))
 
     clusterize_zookeepers(zookeepers)
-
-    ship.expose_all(range(50000, 50100))
-
-    return Shipment(name='local', containers=zookeepers+jmxtranses)
