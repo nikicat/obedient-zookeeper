@@ -255,7 +255,6 @@ def test(shipment, count):
             zookeeper = create_zookeeper()
             zookeeper.name = '{}-{}'.format(zookeeper.name, i)
             ship.place(zookeeper)
-            zookeeper.doors['client'].expose(52181+i)
             zookeepers.append(zookeeper)
 
             jmxtrans = create_jmxtrans()
