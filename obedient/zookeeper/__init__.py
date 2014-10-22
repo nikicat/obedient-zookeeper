@@ -1,5 +1,5 @@
-from dominator.utils import resource_string, cached
-from dominator.entities import (SourceImage, Image, ConfigVolume, DataVolume, LogVolume, Door,
+from dominator.utils import resource_string, cached, aslist, groupbysorted
+from dominator.entities import (SourceImage, Image, ConfigVolume, DataVolume, LogVolume, Door, Task,
                                 Container, TextFile, JsonFile, IniFile, RotatedLogFile, LogFile)
 
 
@@ -208,7 +208,10 @@ def create_jmxtrans():
     def create_zookeeper_json(jmxtrans=jmxtrans):
         graphite_writers = [{
             '@class': 'com.googlecode.jmxtrans.model.output.GraphiteWriter',
-            'settings': door.hostport,
+            'settings': {
+                'host': door.host,
+                'port': door.port,
+            },
         } for door in jmxtrans.links['graphites']]
 
         zkdoor = jmxtrans.links['zookeeper']
@@ -264,3 +267,44 @@ def test(shipment, count):
     shipment.expose_ports(range(50000, 50100))
 
     clusterize_zookeepers(zookeepers)
+
+
+def build_zookeeper_cluster(ships):
+    zookeepers = []
+    for shipnum, ship in enumerate(ships):
+        zookeeper = create_zookeeper()
+        ship.place(zookeeper)
+        zookeepers.append(zookeeper)
+
+    clusterize_zookeepers(zookeepers)
+    return zookeepers
+
+
+def filter_quorum_ships(ships):
+    """Return odd number of ships, one from each datacenter."""
+    zooships = [list(dcships)[0] for datacenter, dcships in groupbysorted(ships, lambda s: s.datacenter)]
+    if len(zooships) % 2 == 0:
+        # If we have even datacenter count, then remove one datacenter from the list
+        return zooships[:-1]
+    else:
+        return zooships
+
+
+@aslist
+def attach_jmxtrans_to_zookeeper(zookeepers, graphites):
+    plaindoors = [graphite.doors['plain'] for graphite in graphites]
+    for zookeeper in zookeepers:
+        jmxtrans = create_jmxtrans()
+        jmxtrans.links['zookeeper'] = zookeeper.doors['jmx']
+        jmxtrans.links['graphites'] = plaindoors
+        zookeeper.ship.place(jmxtrans)
+        yield jmxtrans
+
+
+def create_zkcli_task(zookeepers):
+    return Task(
+        name='zkcli',
+        image=get_zookeeper_image(),
+        entrypoint=['/opt/zookeeper/bin/zkCli.sh'],
+        command=['-server', zookeepers[0].doors['client'].hostport],
+    )
