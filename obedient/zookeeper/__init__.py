@@ -11,7 +11,7 @@ def get_zookeeper_image():
         env={'DEBIAN_FRONTEND': 'noninteractive'},
         scripts=[
             'apt-get -q update && apt-get -qy install openjdk-7-jre-headless && apt-get clean',
-            'curl -s http://mirrors.koehn.com/apache/zookeeper/zookeeper-3.4.6/zookeeper-3.4.6.tar.gz'
+            'curl -s http://apache.mirrors.hoobly.com/zookeeper/zookeeper-3.4.6/zookeeper-3.4.6.tar.gz'
             ' | tar --strip-components=1 -xz',
         ],
         files={'/root/run.sh': resource_string('run.sh')},
