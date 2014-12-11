@@ -268,10 +268,10 @@ def test(shipment, count):
     clusterize_zookeepers(zookeepers)
 
 
-def build_zookeeper_cluster(ships):
+def build_zookeeper_cluster(ships, memory=1024**3):
     zookeepers = []
     for shipnum, ship in enumerate(ships):
-        zookeeper = create_zookeeper()
+        zookeeper = create_zookeeper(memory=memory)
         ship.place(zookeeper)
         zookeepers.append(zookeeper)
 
