@@ -20,5 +20,5 @@ if __name__ == '__main__':
         entry_points={'obedient': [
             'test = obedient.zookeeper:test',
         ]},
-        install_requires=['dominator[full] >=14a'],
+        install_requires=['dominator[full] >=15.1a'],
     )

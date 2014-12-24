@@ -263,7 +263,7 @@ def test(shipment, count):
             jmxtrans.links['graphites'] = []
             ship.place(jmxtrans)
 
-    shipment.expose_ports(range(50000, 50100))
+    shipment.expose_ports(list(range(50000, 50100)))
 
     clusterize_zookeepers(zookeepers)
 

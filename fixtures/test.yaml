@@ -1,823 +1,902 @@
 &id037 !!python/object:dominator.entities.Shipment
-dominator_version: 14.0.0
+dominator_version: 15.1.0
 name: unnamed
-ships:
-  local: &id017 !!python/object:dominator.entities.LocalShip
-    certificate: |
-      -----BEGIN CERTIFICATE-----
-      MIIBbzCB2QICA+gwDQYJKoZIhvcNAQEFBQAwADAeFw0xNDExMDcxNDQzMDdaFw0y
-      NDExMDQxNDQzMDdaMAAwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAMjxetrU
-      mMMfV5RBo5ArLVlhuNTTSyha6K4SrIVX3ijoUWz3UhAYctZ2h8kt3ZWWpUM+PnSA
-      eW8TNYln6okw/QaGo+/v7Pghtdi5jhEIdg1nJgV88EDqgTtVG7zzsYCT4NoMQxBC
-      d0rp5NHXZgRqeSgQng+fMhjBMMXuvc5TIP2dAgMBAAEwDQYJKoZIhvcNAQEFBQAD
-      gYEAinnyN6HxkthJwdSiRbPXDpj0bdZ+AmKhq0WWilxSWehXKVihUYMx6g45xkft
-      Uw/w4hF01ZRvwJeCSV8H6x9uJ/5UhmEB+aBQ5AGQKqqrwOebvdp8x2bhu0iFsb8P
-      7OmfjXBs41zzwOyndU0WvUVk7VVoz+l5WVTLoNs3B2yeVhY=
-      -----END CERTIFICATE-----
-      -----BEGIN PRIVATE KEY-----
-      MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBAMjxetrUmMMfV5RB
-      o5ArLVlhuNTTSyha6K4SrIVX3ijoUWz3UhAYctZ2h8kt3ZWWpUM+PnSAeW8TNYln
-      6okw/QaGo+/v7Pghtdi5jhEIdg1nJgV88EDqgTtVG7zzsYCT4NoMQxBCd0rp5NHX
-      ZgRqeSgQng+fMhjBMMXuvc5TIP2dAgMBAAECgYEAs+ggCpSVQP1qt/4cpxNBQulP
-      Rpz2iWb7M/7cH3aQHSgC3wB/pJF/H6x33hMGdMuvowizejMcheo44JD9V19Y6UxX
-      GxqhUGoGnZEMlmHhW83LlPuRmSWIhu9xXO7GX/a7pdG8e8WQADFS/6YMgDG7OJrH
-      VBRDlKHc5XZ882BDrjECQQDs2/xgNDzn8UPz1ffgfZyUTT5M3d+a0Ycd1/1dUJsf
-      r+34pw5Wx96Ql/ISXRHbgFk5ppFMGRaPu0qoQKBp0UgDAkEA2S57pIosmGDPp/RY
-      IPkzhO1k2cvjqY4/M6+L3BnxYtQKnHTE8+N5ZZ/wtfS6gthxM8aL1YQolK7ZNBWT
-      14PB3wJAb605TVLT9Lg4xdr4yIvxK6tP2IY0S5bHEjcoarr6qPIWTcrWY+xQ7/P0
-      Wtwu80OMzjXPBAZAMPypsrLl736RaQJAAQivngDqZW9QjcQkB0QocqGOsVq/IreC
-      pYRYbhvRgl7wDf6gUWjr0wgH5VXc7XKKV2zCjamrZ8nNTuorYgNGkQJBALH/RZcL
-      cFbwY4zgRR+inP15twJ//rtc1GjFX0pgDEcWVsGVflozNX/SJP/LcYZisuALpj9c
-      bXzfMriPnKh4vCI=
-      -----END PRIVATE KEY-----
-    containers:
-      zookeeper-0: &id001 !!python/object:dominator.entities.Container
-        command: null
-        doors:
-          client: &id002 !!python/object:dominator.entities.Door
-            container: *id001
-            exposedport: 50099
-            internalport: 2181
-            name: client
-            protocol: tcp
-            sameports: false
-            schema: zookeeper
-            urls:
-              default: !!python/object:dominator.entities.Url
-                door: *id002
-                name: default
-                path: ''
-          election: &id003 !!python/object:dominator.entities.Door
-            container: *id001
-            exposedport: 50098
-            internalport: 3888
-            name: election
-            protocol: tcp
-            sameports: false
-            schema: zookeeper-election
-            urls:
-              default: !!python/object:dominator.entities.Url
-                door: *id003
-                name: default
-                path: ''
-          jmx: &id004 !!python/object:dominator.entities.Door
-            container: *id001
-            exposedport: 50097
-            internalport: 50097
-            name: jmx
-            protocol: tcp
-            sameports: true
-            schema: rmi
-            urls:
-              default: !!python/object:dominator.entities.Url
-                door: *id004
-                name: default
-                path: ''
-          peer: &id005 !!python/object:dominator.entities.Door
-            container: *id001
-            exposedport: 50096
-            internalport: 2888
-            name: peer
-            protocol: tcp
-            sameports: false
-            schema: zookeeper-peer
-            urls:
-              default: !!python/object:dominator.entities.Url
-                door: *id005
-                name: default
-                path: ''
-        entrypoint: null
-        env: {}
-        hostname: null
-        id: null
-        image: &id011 !!python/object:dominator.entities.SourceImage
-          command:
-          - /root/run.sh
-          entrypoint:
-          - sh
-          env:
-            DEBIAN_FRONTEND: noninteractive
-          files:
-            /root/run.sh: !!python/tuple
-            - chksum: 0
-              devmajor: 0
-              devminor: 0
-              gid: 0
-              gname: root
-              linkname: ''
-              mode: 420
-              mtime: 0.0
-              name: /root/run.sh
-              size: 149
-              type: !!binary |
-                MA==
-              uid: 0
-              uname: root
-            - |
-              #!/bin/sh -xv
-
-              ln -fs /opt/zookeeper/conf/myid /var/lib/zookeeper/myid
-              . /opt/zookeeper/conf/env.sh
-
-              /opt/zookeeper/bin/zkServer.sh start-foreground
-          namespace: nikicat
-          parent: !!python/object:dominator.entities.Image
-            namespace: yandex
-            registry: registry.ape.yandex.net
-            repository: trusty
-            tag: latest
-          ports:
-            client: 2181
-            election: 3888
-            jmx: 4888
-            peer: 2888
-          registry: registry.ape.yandex.net
-          repository: zookeeper
-          scripts:
-          - apt-get -q update && apt-get -qy install openjdk-7-jre-headless && apt-get
-            clean
-          - curl -s http://apache.mirrors.hoobly.com/zookeeper/zookeeper-3.4.6/zookeeper-3.4.6.tar.gz
-            | tar --strip-components=1 -xz
-          user: ''
-          volumes:
-            config: /opt/zookeeper/conf
-            data: /var/lib/zookeeper
-            logs: /var/log/zookeeper
-          workdir: /opt/zookeeper
-        links:
-          1: !!python/tuple
-          - *id005
-          - *id003
-          2: !!python/tuple
-          - &id010 !!python/object:dominator.entities.Door
-            container: &id006 !!python/object:dominator.entities.Container
-              command: null
-              doors:
-                client: &id007 !!python/object:dominator.entities.Door
-                  container: *id006
-                  exposedport: 50095
+ships: !!python/object:dominator.utils.BackrefDict
+  children:
+    local: &id017 !!python/object:dominator.entities.LocalShip
+      certificate: |
+        -----BEGIN CERTIFICATE-----
+        MIIBbzCB2QICA+gwDQYJKoZIhvcNAQEFBQAwADAeFw0xNDExMDcxNDQzMDdaFw0y
+        NDExMDQxNDQzMDdaMAAwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAMjxetrU
+        mMMfV5RBo5ArLVlhuNTTSyha6K4SrIVX3ijoUWz3UhAYctZ2h8kt3ZWWpUM+PnSA
+        eW8TNYln6okw/QaGo+/v7Pghtdi5jhEIdg1nJgV88EDqgTtVG7zzsYCT4NoMQxBC
+        d0rp5NHXZgRqeSgQng+fMhjBMMXuvc5TIP2dAgMBAAEwDQYJKoZIhvcNAQEFBQAD
+        gYEAinnyN6HxkthJwdSiRbPXDpj0bdZ+AmKhq0WWilxSWehXKVihUYMx6g45xkft
+        Uw/w4hF01ZRvwJeCSV8H6x9uJ/5UhmEB+aBQ5AGQKqqrwOebvdp8x2bhu0iFsb8P
+        7OmfjXBs41zzwOyndU0WvUVk7VVoz+l5WVTLoNs3B2yeVhY=
+        -----END CERTIFICATE-----
+        -----BEGIN PRIVATE KEY-----
+        MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBAMjxetrUmMMfV5RB
+        o5ArLVlhuNTTSyha6K4SrIVX3ijoUWz3UhAYctZ2h8kt3ZWWpUM+PnSAeW8TNYln
+        6okw/QaGo+/v7Pghtdi5jhEIdg1nJgV88EDqgTtVG7zzsYCT4NoMQxBCd0rp5NHX
+        ZgRqeSgQng+fMhjBMMXuvc5TIP2dAgMBAAECgYEAs+ggCpSVQP1qt/4cpxNBQulP
+        Rpz2iWb7M/7cH3aQHSgC3wB/pJF/H6x33hMGdMuvowizejMcheo44JD9V19Y6UxX
+        GxqhUGoGnZEMlmHhW83LlPuRmSWIhu9xXO7GX/a7pdG8e8WQADFS/6YMgDG7OJrH
+        VBRDlKHc5XZ882BDrjECQQDs2/xgNDzn8UPz1ffgfZyUTT5M3d+a0Ycd1/1dUJsf
+        r+34pw5Wx96Ql/ISXRHbgFk5ppFMGRaPu0qoQKBp0UgDAkEA2S57pIosmGDPp/RY
+        IPkzhO1k2cvjqY4/M6+L3BnxYtQKnHTE8+N5ZZ/wtfS6gthxM8aL1YQolK7ZNBWT
+        14PB3wJAb605TVLT9Lg4xdr4yIvxK6tP2IY0S5bHEjcoarr6qPIWTcrWY+xQ7/P0
+        Wtwu80OMzjXPBAZAMPypsrLl736RaQJAAQivngDqZW9QjcQkB0QocqGOsVq/IreC
+        pYRYbhvRgl7wDf6gUWjr0wgH5VXc7XKKV2zCjamrZ8nNTuorYgNGkQJBALH/RZcL
+        cFbwY4zgRR+inP15twJ//rtc1GjFX0pgDEcWVsGVflozNX/SJP/LcYZisuALpj9c
+        bXzfMriPnKh4vCI=
+        -----END PRIVATE KEY-----
+      containers: !!python/object:dominator.utils.BackrefDict
+        children:
+          zookeeper-0: &id001 !!python/object:dominator.entities.Container
+            command: null
+            doors: !!python/object:dominator.utils.BackrefDict
+              children:
+                client: &id002 !!python/object:dominator.entities.Door
+                  container: *id001
+                  exposedport: 50099
                   internalport: 2181
                   name: client
                   protocol: tcp
                   sameports: false
                   schema: zookeeper
-                  urls:
-                    default: !!python/object:dominator.entities.Url
-                      door: *id007
-                      name: default
-                      path: ''
-                election: &id008 !!python/object:dominator.entities.Door
-                  container: *id006
-                  exposedport: 50094
+                  urls: !!python/object:dominator.utils.BackrefDict
+                    children:
+                      default: !!python/object:dominator.entities.Url
+                        door: *id002
+                        name: default
+                        path: ''
+                    parent: *id002
+                election: &id003 !!python/object:dominator.entities.Door
+                  container: *id001
+                  exposedport: 50098
                   internalport: 3888
                   name: election
                   protocol: tcp
                   sameports: false
                   schema: zookeeper-election
-                  urls:
-                    default: !!python/object:dominator.entities.Url
-                      door: *id008
-                      name: default
-                      path: ''
-                jmx: &id009 !!python/object:dominator.entities.Door
-                  container: *id006
-                  exposedport: 50093
-                  internalport: 50093
+                  urls: !!python/object:dominator.utils.BackrefDict
+                    children:
+                      default: !!python/object:dominator.entities.Url
+                        door: *id003
+                        name: default
+                        path: ''
+                    parent: *id003
+                jmx: &id004 !!python/object:dominator.entities.Door
+                  container: *id001
+                  exposedport: 50097
+                  internalport: 50097
                   name: jmx
                   protocol: tcp
                   sameports: true
                   schema: rmi
-                  urls:
-                    default: !!python/object:dominator.entities.Url
-                      door: *id009
-                      name: default
-                      path: ''
-                peer: *id010
-              entrypoint: null
-              env: {}
-              hostname: null
-              id: null
-              image: *id011
-              links:
-                1: !!python/tuple
-                - *id005
-                - *id003
-                2: !!python/tuple
-                - *id010
-                - *id008
-                3: !!python/tuple
-                - &id016 !!python/object:dominator.entities.Door
-                  container: &id012 !!python/object:dominator.entities.Container
-                    command: null
-                    doors:
-                      client: &id013 !!python/object:dominator.entities.Door
-                        container: *id012
-                        exposedport: 50091
-                        internalport: 2181
-                        name: client
-                        protocol: tcp
-                        sameports: false
-                        schema: zookeeper
-                        urls:
-                          default: !!python/object:dominator.entities.Url
-                            door: *id013
-                            name: default
-                            path: ''
-                      election: &id014 !!python/object:dominator.entities.Door
-                        container: *id012
-                        exposedport: 50090
-                        internalport: 3888
-                        name: election
-                        protocol: tcp
-                        sameports: false
-                        schema: zookeeper-election
-                        urls:
-                          default: !!python/object:dominator.entities.Url
-                            door: *id014
-                            name: default
-                            path: ''
-                      jmx: &id015 !!python/object:dominator.entities.Door
-                        container: *id012
-                        exposedport: 50089
-                        internalport: 50089
-                        name: jmx
-                        protocol: tcp
-                        sameports: true
-                        schema: rmi
-                        urls:
-                          default: !!python/object:dominator.entities.Url
-                            door: *id015
-                            name: default
-                            path: ''
-                      peer: *id016
-                    entrypoint: null
-                    env: {}
-                    hostname: null
-                    id: null
-                    image: *id011
-                    links:
-                      1: !!python/tuple
-                      - *id005
-                      - *id003
-                      2: !!python/tuple
-                      - *id010
-                      - *id008
-                      3: !!python/tuple
-                      - *id016
-                      - *id014
-                    memory: 1073741824
-                    name: zookeeper-2
-                    network_mode: ''
-                    privileged: false
-                    ship: *id017
-                    status: null
-                    user: ''
-                    volumes:
-                      config: &id018 !!python/object:dominator.entities.ConfigVolume
-                        container: *id012
-                        dest: /opt/zookeeper/conf
-                        files:
-                          env.sh: !!python/object:dominator.entities.TextFile
-                            data: export JVMFLAGS="-Dcom.sun.management.jmxremote.authenticate=False
-                              -Dcom.sun.management.jmxremote.local.only=False -Dcom.sun.management.jmxremote.port=50089
-                              -Dcom.sun.management.jmxremote.rmi.port=50089 -Dcom.sun.management.jmxremote.ssl=False
-                              -Djava.rmi.server.hostname=localhost -Dvisualvm.display.name=localship:zookeeper-2
-                              -Xmx805306368 -server -showversion"
-                            name: env.sh
-                            volume: *id018
-                          log4j.properties: !!python/object:dominator.entities.TextFile
-                            data: |
-                              log4j.rootLogger=${zookeeper.root.logger}
-
-                              log4j.rootLogger=INFO, CONSOLE, FILE
-
-                              # Disable message flooding
-                              log4j.logger.org.apache.zookeeper.server.NIOServerCnxnFactory=WARN, FILE
-                              log4j.logger.org.apache.zookeeper.server.NIOServerCnxn=ERROR, FILE
-
-                              log4j.additivity.org.apache.zookeeper.server.NIOServerCnxnFactory=false
-                              log4j.additivity.org.apache.zookeeper.server.NIOServerCnxn=false
-
-                              log4j.appender.CONSOLE=org.apache.log4j.ConsoleAppender
-                              log4j.appender.CONSOLE.Threshold=ERROR
-                              log4j.appender.CONSOLE.layout=org.apache.log4j.PatternLayout
-                              log4j.appender.CONSOLE.layout.ConversionPattern=%d{ISO8601} %-5p -%-1X{myid}- [%t@%C:%L]  %m%n
-
-                              log4j.appender.FILE=org.apache.log4j.FileAppender
-                              log4j.appender.FILE.File=/var/log/zookeeper/zookeeper.log
-                              log4j.appender.FILE.Threshold=DEBUG
-                              log4j.appender.FILE.layout=org.apache.log4j.PatternLayout
-                              log4j.appender.FILE.layout.ConversionPattern=%d{ISO8601} %-5p -%-1X{myid}- [%t@%C:%L]  %m%n
-                            name: log4j.properties
-                            volume: *id018
-                          myid: !!python/object:dominator.entities.TextFile
-                            data: '3'
-                            name: myid
-                            volume: *id018
-                          zoo.cfg: !!python/object:dominator.entities.IniFile
-                            content:
-                              autopurge.purgeInterval: 1
-                              clientPort: 2181
-                              dataDir: /var/lib/zookeeper
-                              globalOutstandingLimit: 1000
-                              initLimit: 100
-                              maxClientCnxns: 0
-                              server.1: localhost:50096:50098
-                              server.2: localhost:50092:50094
-                              server.3: 0.0.0.0:2888:3888
-                              snapCount: 10000
-                              syncLimit: 50
-                              tickTime: 2000
-                            name: zoo.cfg
-                            volume: *id018
-                        name: config
-                      data: !!python/object:dominator.entities.DataVolume
-                        container: *id012
-                        dest: /var/lib/zookeeper
-                        name: data
-                        path: null
-                        ro: false
-                      logs: &id019 !!python/object:dominator.entities.LogVolume
-                        container: *id012
-                        dest: /var/log/zookeeper
-                        files:
-                          zookeeper.log: !!python/object:dominator.entities.RotatedLogFile
-                            format: '%Y-%m-%d %H:%M:%S,%f'
-                            length: 23
-                            name: zookeeper.log
-                            volume: *id019
-                        name: logs
-                        path: null
-                        ro: false
-                    zkid: 3
-                  exposedport: 50088
+                  urls: !!python/object:dominator.utils.BackrefDict
+                    children:
+                      default: !!python/object:dominator.entities.Url
+                        door: *id004
+                        name: default
+                        path: ''
+                    parent: *id004
+                peer: &id005 !!python/object:dominator.entities.Door
+                  container: *id001
+                  exposedport: 50096
                   internalport: 2888
                   name: peer
                   protocol: tcp
                   sameports: false
                   schema: zookeeper-peer
-                  urls:
-                    default: !!python/object:dominator.entities.Url
-                      door: *id016
-                      name: default
-                      path: ''
-                - *id014
-              memory: 1073741824
-              name: zookeeper-1
-              network_mode: ''
-              privileged: false
-              ship: *id017
-              status: null
+                  urls: !!python/object:dominator.utils.BackrefDict
+                    children:
+                      default: !!python/object:dominator.entities.Url
+                        door: *id005
+                        name: default
+                        path: ''
+                    parent: *id005
+              parent: *id001
+            entrypoint: null
+            env: {}
+            hostname: null
+            id: null
+            image: &id011 !!python/object:dominator.entities.SourceImage
+              command:
+              - /root/run.sh
+              entrypoint:
+              - sh
+              env:
+                DEBIAN_FRONTEND: noninteractive
+              files:
+                /root/run.sh: !!python/tuple
+                - chksum: 0
+                  devmajor: 0
+                  devminor: 0
+                  gid: 0
+                  gname: root
+                  linkname: ''
+                  mode: 420
+                  mtime: 0.0
+                  name: /root/run.sh
+                  size: 149
+                  type: !!binary |
+                    MA==
+                  uid: 0
+                  uname: root
+                - |
+                  #!/bin/sh -xv
+
+                  ln -fs /opt/zookeeper/conf/myid /var/lib/zookeeper/myid
+                  . /opt/zookeeper/conf/env.sh
+
+                  /opt/zookeeper/bin/zkServer.sh start-foreground
+              namespace: nikicat
+              parent: !!python/object:dominator.entities.Image
+                namespace: yandex
+                registry: registry.ape.yandex.net
+                repository: trusty
+                tag: latest
+              ports:
+                client: 2181
+                election: 3888
+                jmx: 4888
+                peer: 2888
+              registry: registry.ape.yandex.net
+              repository: zookeeper
+              scripts:
+              - apt-get -q update && apt-get -qy install openjdk-7-jre-headless &&
+                apt-get clean
+              - curl -s http://apache.mirrors.hoobly.com/zookeeper/zookeeper-3.4.6/zookeeper-3.4.6.tar.gz
+                | tar --strip-components=1 -xz
               user: ''
               volumes:
-                config: &id020 !!python/object:dominator.entities.ConfigVolume
-                  container: *id006
+                config: /opt/zookeeper/conf
+                data: /var/lib/zookeeper
+                logs: /var/log/zookeeper
+              workdir: /opt/zookeeper
+            links:
+              1: !!python/tuple
+              - *id005
+              - *id003
+              2: !!python/tuple
+              - &id010 !!python/object:dominator.entities.Door
+                container: &id006 !!python/object:dominator.entities.Container
+                  command: null
+                  doors: !!python/object:dominator.utils.BackrefDict
+                    children:
+                      client: &id007 !!python/object:dominator.entities.Door
+                        container: *id006
+                        exposedport: 50095
+                        internalport: 2181
+                        name: client
+                        protocol: tcp
+                        sameports: false
+                        schema: zookeeper
+                        urls: !!python/object:dominator.utils.BackrefDict
+                          children:
+                            default: !!python/object:dominator.entities.Url
+                              door: *id007
+                              name: default
+                              path: ''
+                          parent: *id007
+                      election: &id008 !!python/object:dominator.entities.Door
+                        container: *id006
+                        exposedport: 50094
+                        internalport: 3888
+                        name: election
+                        protocol: tcp
+                        sameports: false
+                        schema: zookeeper-election
+                        urls: !!python/object:dominator.utils.BackrefDict
+                          children:
+                            default: !!python/object:dominator.entities.Url
+                              door: *id008
+                              name: default
+                              path: ''
+                          parent: *id008
+                      jmx: &id009 !!python/object:dominator.entities.Door
+                        container: *id006
+                        exposedport: 50093
+                        internalport: 50093
+                        name: jmx
+                        protocol: tcp
+                        sameports: true
+                        schema: rmi
+                        urls: !!python/object:dominator.utils.BackrefDict
+                          children:
+                            default: !!python/object:dominator.entities.Url
+                              door: *id009
+                              name: default
+                              path: ''
+                          parent: *id009
+                      peer: *id010
+                    parent: *id006
+                  entrypoint: null
+                  env: {}
+                  hostname: null
+                  id: null
+                  image: *id011
+                  links:
+                    1: !!python/tuple
+                    - *id005
+                    - *id003
+                    2: !!python/tuple
+                    - *id010
+                    - *id008
+                    3: !!python/tuple
+                    - &id016 !!python/object:dominator.entities.Door
+                      container: &id012 !!python/object:dominator.entities.Container
+                        command: null
+                        doors: !!python/object:dominator.utils.BackrefDict
+                          children:
+                            client: &id013 !!python/object:dominator.entities.Door
+                              container: *id012
+                              exposedport: 50091
+                              internalport: 2181
+                              name: client
+                              protocol: tcp
+                              sameports: false
+                              schema: zookeeper
+                              urls: !!python/object:dominator.utils.BackrefDict
+                                children:
+                                  default: !!python/object:dominator.entities.Url
+                                    door: *id013
+                                    name: default
+                                    path: ''
+                                parent: *id013
+                            election: &id014 !!python/object:dominator.entities.Door
+                              container: *id012
+                              exposedport: 50090
+                              internalport: 3888
+                              name: election
+                              protocol: tcp
+                              sameports: false
+                              schema: zookeeper-election
+                              urls: !!python/object:dominator.utils.BackrefDict
+                                children:
+                                  default: !!python/object:dominator.entities.Url
+                                    door: *id014
+                                    name: default
+                                    path: ''
+                                parent: *id014
+                            jmx: &id015 !!python/object:dominator.entities.Door
+                              container: *id012
+                              exposedport: 50089
+                              internalport: 50089
+                              name: jmx
+                              protocol: tcp
+                              sameports: true
+                              schema: rmi
+                              urls: !!python/object:dominator.utils.BackrefDict
+                                children:
+                                  default: !!python/object:dominator.entities.Url
+                                    door: *id015
+                                    name: default
+                                    path: ''
+                                parent: *id015
+                            peer: *id016
+                          parent: *id012
+                        entrypoint: null
+                        env: {}
+                        hostname: null
+                        id: null
+                        image: *id011
+                        links:
+                          1: !!python/tuple
+                          - *id005
+                          - *id003
+                          2: !!python/tuple
+                          - *id010
+                          - *id008
+                          3: !!python/tuple
+                          - *id016
+                          - *id014
+                        memory: 1073741824
+                        name: zookeeper-2
+                        network_mode: ''
+                        privileged: false
+                        ship: *id017
+                        status: null
+                        user: ''
+                        volumes: !!python/object:dominator.utils.BackrefDict
+                          children:
+                            config: &id018 !!python/object:dominator.entities.ConfigVolume
+                              container: *id012
+                              dest: /opt/zookeeper/conf
+                              files: !!python/object:dominator.utils.BackrefDict
+                                children:
+                                  env.sh: !!python/object:dominator.entities.TextFile
+                                    data: export JVMFLAGS="-Dcom.sun.management.jmxremote.authenticate=False
+                                      -Dcom.sun.management.jmxremote.local.only=False
+                                      -Dcom.sun.management.jmxremote.port=50089 -Dcom.sun.management.jmxremote.rmi.port=50089
+                                      -Dcom.sun.management.jmxremote.ssl=False -Djava.rmi.server.hostname=localhost
+                                      -Dvisualvm.display.name=localship:zookeeper-2
+                                      -Xmx805306368 -server -showversion"
+                                    name: env.sh
+                                    volume: *id018
+                                  log4j.properties: !!python/object:dominator.entities.TextFile
+                                    data: |
+                                      log4j.rootLogger=${zookeeper.root.logger}
+
+                                      log4j.rootLogger=INFO, CONSOLE, FILE
+
+                                      # Disable message flooding
+                                      log4j.logger.org.apache.zookeeper.server.NIOServerCnxnFactory=WARN, FILE
+                                      log4j.logger.org.apache.zookeeper.server.NIOServerCnxn=ERROR, FILE
+
+                                      log4j.additivity.org.apache.zookeeper.server.NIOServerCnxnFactory=false
+                                      log4j.additivity.org.apache.zookeeper.server.NIOServerCnxn=false
+
+                                      log4j.appender.CONSOLE=org.apache.log4j.ConsoleAppender
+                                      log4j.appender.CONSOLE.Threshold=ERROR
+                                      log4j.appender.CONSOLE.layout=org.apache.log4j.PatternLayout
+                                      log4j.appender.CONSOLE.layout.ConversionPattern=%d{ISO8601} %-5p -%-1X{myid}- [%t@%C:%L]  %m%n
+
+                                      log4j.appender.FILE=org.apache.log4j.FileAppender
+                                      log4j.appender.FILE.File=/var/log/zookeeper/zookeeper.log
+                                      log4j.appender.FILE.Threshold=DEBUG
+                                      log4j.appender.FILE.layout=org.apache.log4j.PatternLayout
+                                      log4j.appender.FILE.layout.ConversionPattern=%d{ISO8601} %-5p -%-1X{myid}- [%t@%C:%L]  %m%n
+                                    name: log4j.properties
+                                    volume: *id018
+                                  myid: !!python/object:dominator.entities.TextFile
+                                    data: '3'
+                                    name: myid
+                                    volume: *id018
+                                  zoo.cfg: !!python/object:dominator.entities.IniFile
+                                    content:
+                                      autopurge.purgeInterval: 1
+                                      clientPort: 2181
+                                      dataDir: /var/lib/zookeeper
+                                      globalOutstandingLimit: 1000
+                                      initLimit: 100
+                                      maxClientCnxns: 0
+                                      server.1: localhost:50096:50098
+                                      server.2: localhost:50092:50094
+                                      server.3: 0.0.0.0:2888:3888
+                                      snapCount: 10000
+                                      syncLimit: 50
+                                      tickTime: 2000
+                                    name: zoo.cfg
+                                    volume: *id018
+                                parent: *id018
+                              name: config
+                            data: !!python/object:dominator.entities.DataVolume
+                              container: *id012
+                              dest: /var/lib/zookeeper
+                              name: data
+                              path: null
+                              ro: false
+                            logs: &id019 !!python/object:dominator.entities.LogVolume
+                              container: *id012
+                              dest: /var/log/zookeeper
+                              files: !!python/object:dominator.utils.BackrefDict
+                                children:
+                                  zookeeper.log: !!python/object:dominator.entities.RotatedLogFile
+                                    format: '%Y-%m-%d %H:%M:%S,%f'
+                                    length: 23
+                                    name: zookeeper.log
+                                    volume: *id019
+                                parent: *id019
+                              name: logs
+                              path: null
+                              ro: false
+                          parent: *id012
+                        zkid: 3
+                      exposedport: 50088
+                      internalport: 2888
+                      name: peer
+                      protocol: tcp
+                      sameports: false
+                      schema: zookeeper-peer
+                      urls: !!python/object:dominator.utils.BackrefDict
+                        children:
+                          default: !!python/object:dominator.entities.Url
+                            door: *id016
+                            name: default
+                            path: ''
+                        parent: *id016
+                    - *id014
+                  memory: 1073741824
+                  name: zookeeper-1
+                  network_mode: ''
+                  privileged: false
+                  ship: *id017
+                  status: null
+                  user: ''
+                  volumes: !!python/object:dominator.utils.BackrefDict
+                    children:
+                      config: &id020 !!python/object:dominator.entities.ConfigVolume
+                        container: *id006
+                        dest: /opt/zookeeper/conf
+                        files: !!python/object:dominator.utils.BackrefDict
+                          children:
+                            env.sh: !!python/object:dominator.entities.TextFile
+                              data: export JVMFLAGS="-Dcom.sun.management.jmxremote.authenticate=False
+                                -Dcom.sun.management.jmxremote.local.only=False -Dcom.sun.management.jmxremote.port=50093
+                                -Dcom.sun.management.jmxremote.rmi.port=50093 -Dcom.sun.management.jmxremote.ssl=False
+                                -Djava.rmi.server.hostname=localhost -Dvisualvm.display.name=localship:zookeeper-1
+                                -Xmx805306368 -server -showversion"
+                              name: env.sh
+                              volume: *id020
+                            log4j.properties: !!python/object:dominator.entities.TextFile
+                              data: |
+                                log4j.rootLogger=${zookeeper.root.logger}
+
+                                log4j.rootLogger=INFO, CONSOLE, FILE
+
+                                # Disable message flooding
+                                log4j.logger.org.apache.zookeeper.server.NIOServerCnxnFactory=WARN, FILE
+                                log4j.logger.org.apache.zookeeper.server.NIOServerCnxn=ERROR, FILE
+
+                                log4j.additivity.org.apache.zookeeper.server.NIOServerCnxnFactory=false
+                                log4j.additivity.org.apache.zookeeper.server.NIOServerCnxn=false
+
+                                log4j.appender.CONSOLE=org.apache.log4j.ConsoleAppender
+                                log4j.appender.CONSOLE.Threshold=ERROR
+                                log4j.appender.CONSOLE.layout=org.apache.log4j.PatternLayout
+                                log4j.appender.CONSOLE.layout.ConversionPattern=%d{ISO8601} %-5p -%-1X{myid}- [%t@%C:%L]  %m%n
+
+                                log4j.appender.FILE=org.apache.log4j.FileAppender
+                                log4j.appender.FILE.File=/var/log/zookeeper/zookeeper.log
+                                log4j.appender.FILE.Threshold=DEBUG
+                                log4j.appender.FILE.layout=org.apache.log4j.PatternLayout
+                                log4j.appender.FILE.layout.ConversionPattern=%d{ISO8601} %-5p -%-1X{myid}- [%t@%C:%L]  %m%n
+                              name: log4j.properties
+                              volume: *id020
+                            myid: !!python/object:dominator.entities.TextFile
+                              data: '2'
+                              name: myid
+                              volume: *id020
+                            zoo.cfg: !!python/object:dominator.entities.IniFile
+                              content:
+                                autopurge.purgeInterval: 1
+                                clientPort: 2181
+                                dataDir: /var/lib/zookeeper
+                                globalOutstandingLimit: 1000
+                                initLimit: 100
+                                maxClientCnxns: 0
+                                server.1: localhost:50096:50098
+                                server.2: 0.0.0.0:2888:3888
+                                server.3: localhost:50088:50090
+                                snapCount: 10000
+                                syncLimit: 50
+                                tickTime: 2000
+                              name: zoo.cfg
+                              volume: *id020
+                          parent: *id020
+                        name: config
+                      data: !!python/object:dominator.entities.DataVolume
+                        container: *id006
+                        dest: /var/lib/zookeeper
+                        name: data
+                        path: null
+                        ro: false
+                      logs: &id021 !!python/object:dominator.entities.LogVolume
+                        container: *id006
+                        dest: /var/log/zookeeper
+                        files: !!python/object:dominator.utils.BackrefDict
+                          children:
+                            zookeeper.log: !!python/object:dominator.entities.RotatedLogFile
+                              format: '%Y-%m-%d %H:%M:%S,%f'
+                              length: 23
+                              name: zookeeper.log
+                              volume: *id021
+                          parent: *id021
+                        name: logs
+                        path: null
+                        ro: false
+                    parent: *id006
+                  zkid: 2
+                exposedport: 50092
+                internalport: 2888
+                name: peer
+                protocol: tcp
+                sameports: false
+                schema: zookeeper-peer
+                urls: !!python/object:dominator.utils.BackrefDict
+                  children:
+                    default: !!python/object:dominator.entities.Url
+                      door: *id010
+                      name: default
+                      path: ''
+                  parent: *id010
+              - *id008
+              3: !!python/tuple
+              - *id016
+              - *id014
+            memory: 1073741824
+            name: zookeeper-0
+            network_mode: ''
+            privileged: false
+            ship: *id017
+            status: null
+            user: ''
+            volumes: !!python/object:dominator.utils.BackrefDict
+              children:
+                config: &id022 !!python/object:dominator.entities.ConfigVolume
+                  container: *id001
                   dest: /opt/zookeeper/conf
-                  files:
-                    env.sh: !!python/object:dominator.entities.TextFile
-                      data: export JVMFLAGS="-Dcom.sun.management.jmxremote.authenticate=False
-                        -Dcom.sun.management.jmxremote.local.only=False -Dcom.sun.management.jmxremote.port=50093
-                        -Dcom.sun.management.jmxremote.rmi.port=50093 -Dcom.sun.management.jmxremote.ssl=False
-                        -Djava.rmi.server.hostname=localhost -Dvisualvm.display.name=localship:zookeeper-1
-                        -Xmx805306368 -server -showversion"
-                      name: env.sh
-                      volume: *id020
-                    log4j.properties: !!python/object:dominator.entities.TextFile
-                      data: |
-                        log4j.rootLogger=${zookeeper.root.logger}
+                  files: !!python/object:dominator.utils.BackrefDict
+                    children:
+                      env.sh: !!python/object:dominator.entities.TextFile
+                        data: export JVMFLAGS="-Dcom.sun.management.jmxremote.authenticate=False
+                          -Dcom.sun.management.jmxremote.local.only=False -Dcom.sun.management.jmxremote.port=50097
+                          -Dcom.sun.management.jmxremote.rmi.port=50097 -Dcom.sun.management.jmxremote.ssl=False
+                          -Djava.rmi.server.hostname=localhost -Dvisualvm.display.name=localship:zookeeper-0
+                          -Xmx805306368 -server -showversion"
+                        name: env.sh
+                        volume: *id022
+                      log4j.properties: !!python/object:dominator.entities.TextFile
+                        data: |
+                          log4j.rootLogger=${zookeeper.root.logger}
 
-                        log4j.rootLogger=INFO, CONSOLE, FILE
+                          log4j.rootLogger=INFO, CONSOLE, FILE
 
-                        # Disable message flooding
-                        log4j.logger.org.apache.zookeeper.server.NIOServerCnxnFactory=WARN, FILE
-                        log4j.logger.org.apache.zookeeper.server.NIOServerCnxn=ERROR, FILE
+                          # Disable message flooding
+                          log4j.logger.org.apache.zookeeper.server.NIOServerCnxnFactory=WARN, FILE
+                          log4j.logger.org.apache.zookeeper.server.NIOServerCnxn=ERROR, FILE
 
-                        log4j.additivity.org.apache.zookeeper.server.NIOServerCnxnFactory=false
-                        log4j.additivity.org.apache.zookeeper.server.NIOServerCnxn=false
+                          log4j.additivity.org.apache.zookeeper.server.NIOServerCnxnFactory=false
+                          log4j.additivity.org.apache.zookeeper.server.NIOServerCnxn=false
 
-                        log4j.appender.CONSOLE=org.apache.log4j.ConsoleAppender
-                        log4j.appender.CONSOLE.Threshold=ERROR
-                        log4j.appender.CONSOLE.layout=org.apache.log4j.PatternLayout
-                        log4j.appender.CONSOLE.layout.ConversionPattern=%d{ISO8601} %-5p -%-1X{myid}- [%t@%C:%L]  %m%n
+                          log4j.appender.CONSOLE=org.apache.log4j.ConsoleAppender
+                          log4j.appender.CONSOLE.Threshold=ERROR
+                          log4j.appender.CONSOLE.layout=org.apache.log4j.PatternLayout
+                          log4j.appender.CONSOLE.layout.ConversionPattern=%d{ISO8601} %-5p -%-1X{myid}- [%t@%C:%L]  %m%n
 
-                        log4j.appender.FILE=org.apache.log4j.FileAppender
-                        log4j.appender.FILE.File=/var/log/zookeeper/zookeeper.log
-                        log4j.appender.FILE.Threshold=DEBUG
-                        log4j.appender.FILE.layout=org.apache.log4j.PatternLayout
-                        log4j.appender.FILE.layout.ConversionPattern=%d{ISO8601} %-5p -%-1X{myid}- [%t@%C:%L]  %m%n
-                      name: log4j.properties
-                      volume: *id020
-                    myid: !!python/object:dominator.entities.TextFile
-                      data: '2'
-                      name: myid
-                      volume: *id020
-                    zoo.cfg: !!python/object:dominator.entities.IniFile
-                      content:
-                        autopurge.purgeInterval: 1
-                        clientPort: 2181
-                        dataDir: /var/lib/zookeeper
-                        globalOutstandingLimit: 1000
-                        initLimit: 100
-                        maxClientCnxns: 0
-                        server.1: localhost:50096:50098
-                        server.2: 0.0.0.0:2888:3888
-                        server.3: localhost:50088:50090
-                        snapCount: 10000
-                        syncLimit: 50
-                        tickTime: 2000
-                      name: zoo.cfg
-                      volume: *id020
+                          log4j.appender.FILE=org.apache.log4j.FileAppender
+                          log4j.appender.FILE.File=/var/log/zookeeper/zookeeper.log
+                          log4j.appender.FILE.Threshold=DEBUG
+                          log4j.appender.FILE.layout=org.apache.log4j.PatternLayout
+                          log4j.appender.FILE.layout.ConversionPattern=%d{ISO8601} %-5p -%-1X{myid}- [%t@%C:%L]  %m%n
+                        name: log4j.properties
+                        volume: *id022
+                      myid: !!python/object:dominator.entities.TextFile
+                        data: '1'
+                        name: myid
+                        volume: *id022
+                      zoo.cfg: !!python/object:dominator.entities.IniFile
+                        content:
+                          autopurge.purgeInterval: 1
+                          clientPort: 2181
+                          dataDir: /var/lib/zookeeper
+                          globalOutstandingLimit: 1000
+                          initLimit: 100
+                          maxClientCnxns: 0
+                          server.1: 0.0.0.0:2888:3888
+                          server.2: localhost:50092:50094
+                          server.3: localhost:50088:50090
+                          snapCount: 10000
+                          syncLimit: 50
+                          tickTime: 2000
+                        name: zoo.cfg
+                        volume: *id022
+                    parent: *id022
                   name: config
                 data: !!python/object:dominator.entities.DataVolume
-                  container: *id006
+                  container: *id001
                   dest: /var/lib/zookeeper
                   name: data
                   path: null
                   ro: false
-                logs: &id021 !!python/object:dominator.entities.LogVolume
-                  container: *id006
+                logs: &id023 !!python/object:dominator.entities.LogVolume
+                  container: *id001
                   dest: /var/log/zookeeper
-                  files:
-                    zookeeper.log: !!python/object:dominator.entities.RotatedLogFile
-                      format: '%Y-%m-%d %H:%M:%S,%f'
-                      length: 23
-                      name: zookeeper.log
-                      volume: *id021
+                  files: !!python/object:dominator.utils.BackrefDict
+                    children:
+                      zookeeper.log: !!python/object:dominator.entities.RotatedLogFile
+                        format: '%Y-%m-%d %H:%M:%S,%f'
+                        length: 23
+                        name: zookeeper.log
+                        volume: *id023
+                    parent: *id023
                   name: logs
                   path: null
                   ro: false
-              zkid: 2
-            exposedport: 50092
-            internalport: 2888
-            name: peer
-            protocol: tcp
-            sameports: false
-            schema: zookeeper-peer
-            urls:
-              default: !!python/object:dominator.entities.Url
-                door: *id010
-                name: default
-                path: ''
-          - *id008
-          3: !!python/tuple
-          - *id016
-          - *id014
-        memory: 1073741824
-        name: zookeeper-0
-        network_mode: ''
-        privileged: false
-        ship: *id017
-        status: null
-        user: ''
-        volumes:
-          config: &id022 !!python/object:dominator.entities.ConfigVolume
-            container: *id001
-            dest: /opt/zookeeper/conf
-            files:
-              env.sh: !!python/object:dominator.entities.TextFile
-                data: export JVMFLAGS="-Dcom.sun.management.jmxremote.authenticate=False
-                  -Dcom.sun.management.jmxremote.local.only=False -Dcom.sun.management.jmxremote.port=50097
-                  -Dcom.sun.management.jmxremote.rmi.port=50097 -Dcom.sun.management.jmxremote.ssl=False
-                  -Djava.rmi.server.hostname=localhost -Dvisualvm.display.name=localship:zookeeper-0
-                  -Xmx805306368 -server -showversion"
-                name: env.sh
-                volume: *id022
-              log4j.properties: !!python/object:dominator.entities.TextFile
-                data: |
-                  log4j.rootLogger=${zookeeper.root.logger}
+              parent: *id001
+            zkid: 1
+          zookeeper-1: *id006
+          zookeeper-2: *id012
+          zookeeper-jmxtrans-0: &id024 !!python/object:dominator.entities.Container
+            command: null
+            doors: !!python/object:dominator.utils.BackrefDict
+              children: {}
+              parent: *id024
+            entrypoint: null
+            env: {}
+            hostname: null
+            id: null
+            image: &id029 !!python/object:dominator.entities.SourceImage
+              command:
+              - /root/run.sh
+              entrypoint:
+              - sh
+              env: {}
+              files:
+                /root/run.sh: !!python/tuple
+                - chksum: 0
+                  devmajor: 0
+                  devminor: 0
+                  gid: 0
+                  gname: root
+                  linkname: ''
+                  mode: 420
+                  mtime: 0.0
+                  name: /root/run.sh
+                  size: 1019
+                  type: !!binary |
+                    MA==
+                  uid: 0
+                  uname: root
+                - |
+                  #!/bin/sh -xv
 
-                  log4j.rootLogger=INFO, CONSOLE, FILE
-
-                  # Disable message flooding
-                  log4j.logger.org.apache.zookeeper.server.NIOServerCnxnFactory=WARN, FILE
-                  log4j.logger.org.apache.zookeeper.server.NIOServerCnxn=ERROR, FILE
-
-                  log4j.additivity.org.apache.zookeeper.server.NIOServerCnxnFactory=false
-                  log4j.additivity.org.apache.zookeeper.server.NIOServerCnxn=false
-
-                  log4j.appender.CONSOLE=org.apache.log4j.ConsoleAppender
-                  log4j.appender.CONSOLE.Threshold=ERROR
-                  log4j.appender.CONSOLE.layout=org.apache.log4j.PatternLayout
-                  log4j.appender.CONSOLE.layout.ConversionPattern=%d{ISO8601} %-5p -%-1X{myid}- [%t@%C:%L]  %m%n
-
-                  log4j.appender.FILE=org.apache.log4j.FileAppender
-                  log4j.appender.FILE.File=/var/log/zookeeper/zookeeper.log
-                  log4j.appender.FILE.Threshold=DEBUG
-                  log4j.appender.FILE.layout=org.apache.log4j.PatternLayout
-                  log4j.appender.FILE.layout.ConversionPattern=%d{ISO8601} %-5p -%-1X{myid}- [%t@%C:%L]  %m%n
-                name: log4j.properties
-                volume: *id022
-              myid: !!python/object:dominator.entities.TextFile
-                data: '1'
-                name: myid
-                volume: *id022
-              zoo.cfg: !!python/object:dominator.entities.IniFile
-                content:
-                  autopurge.purgeInterval: 1
-                  clientPort: 2181
-                  dataDir: /var/lib/zookeeper
-                  globalOutstandingLimit: 1000
-                  initLimit: 100
-                  maxClientCnxns: 0
-                  server.1: 0.0.0.0:2888:3888
-                  server.2: localhost:50092:50094
-                  server.3: localhost:50088:50090
-                  snapCount: 10000
-                  syncLimit: 50
-                  tickTime: 2000
-                name: zoo.cfg
-                volume: *id022
-            name: config
-          data: !!python/object:dominator.entities.DataVolume
-            container: *id001
-            dest: /var/lib/zookeeper
-            name: data
-            path: null
-            ro: false
-          logs: &id023 !!python/object:dominator.entities.LogVolume
-            container: *id001
-            dest: /var/log/zookeeper
-            files:
-              zookeeper.log: !!python/object:dominator.entities.RotatedLogFile
-                format: '%Y-%m-%d %H:%M:%S,%f'
-                length: 23
-                name: zookeeper.log
-                volume: *id023
-            name: logs
-            path: null
-            ro: false
-        zkid: 1
-      zookeeper-1: *id006
-      zookeeper-2: *id012
-      zookeeper-jmxtrans-0: &id024 !!python/object:dominator.entities.Container
-        command: null
-        doors: {}
-        entrypoint: null
-        env: {}
-        hostname: null
-        id: null
-        image: &id028 !!python/object:dominator.entities.SourceImage
-          command:
-          - /root/run.sh
-          entrypoint:
-          - sh
-          env: {}
-          files:
-            /root/run.sh: !!python/tuple
-            - chksum: 0
-              devmajor: 0
-              devminor: 0
-              gid: 0
-              gname: root
-              linkname: ''
-              mode: 420
-              mtime: 0.0
-              name: /root/run.sh
-              size: 1019
-              type: !!binary |
-                MA==
-              uid: 0
-              uname: root
-            - |
-              #!/bin/sh -xv
-
-              /usr/bin/java -server \
-                  -Djava.awt.headless=true \
-                  -Djava.net.preferIPv4Stack=true \
-                  -Djmxtrans.log.level=debug \
-                  -Djmxtrans.log.dir=/var/log/jmxtrans \
-                  -Xms512M \
-                  -Xmx512M \
-                  -XX:+UseConcMarkSweepGC \
-                  -XX:NewRatio=8 \
-                  -XX:NewSize=64m \
-                  -XX:MaxNewSize=64m \
-                  -XX:MaxTenuringThreshold=16 \
-                  -XX:GCTimeRatio=9 \
-                  -XX:PermSize=384m \
-                  -XX:MaxPermSize=384m \
-                  -XX:+UseTLAB \
-                  -XX:CMSInitiatingOccupancyFraction=85 \
-                  -XX:+CMSIncrementalMode \
-                  -XX:+CMSIncrementalPacing \
-                  -XX:ParallelGCThreads=4 \
-                  -Dsun.rmi.dgc.server.gcInterval=28800000 \
-                  -Dsun.rmi.dgc.client.gcInterval=28800000 \
-                  -Dcom.sun.management.jmxremote \
-                  -Dcom.sun.management.jmxremote.ssl=false \
-                  -Dcom.sun.management.jmxremote.authenticate=false \
-                  -Dcom.sun.management.jmxremote.port=2101 \
-                  -jar /root/.m2/repository/org/jmxtrans/jmxtrans/jmxtrans/1.0.0-SNAPSHOT/jmxtrans-1.0.0-SNAPSHOT-all.jar \
-                  -e -j /etc/jmxtrans -s ${INTERVAL:=60} -c false
-          namespace: nikicat
-          parent: !!python/object:dominator.entities.Image
-            namespace: yandex
-            registry: registry.ape.yandex.net
-            repository: trusty
-            tag: latest
-          ports: {}
-          registry: registry.ape.yandex.net
-          repository: jmxtrans
-          scripts:
-          - apt-get -q update && apt-get install -qy openjdk-7-jdk maven && apt-get
-            clean
-          - git clone https://github.com/Naishy/jmxtrans.git
-          - cd jmxtrans && mvn install
-          user: ''
-          volumes:
-            config: /etc/jmxtrans
-            logs: /var/log/jmxtrans
-          workdir: null
-        links:
-          graphites: []
-          zookeeper: *id004
-        memory: 536870912
-        name: zookeeper-jmxtrans-0
-        network_mode: ''
-        privileged: false
-        ship: *id017
-        status: null
-        user: ''
-        volumes:
-          config: &id026 !!python/object:dominator.entities.ConfigVolume
-            container: *id024
-            dest: /etc/jmxtrans
-            files:
-              zookeeper.json: !!python/object:dominator.entities.JsonFile
-                content:
-                  servers:
-                  - alias: localship
-                    host: localhost
-                    numQueryThreads: 2
-                    port: 50097
-                    queries:
-                    - attr:
-                      - NodeCount
-                      obj: org.apache.ZooKeeperService:name0=ReplicatedServer_id1,name1=replica.1,name2=Follower,name3=InMemoryDataTree
-                      oper:
-                      - method: countEphemerals
-                        parameters: []
-                      outputWriters: &id025 []
-                    - attr:
-                      - PacketsReceived
-                      - PacketsSent
-                      - NumAliveConnections
-                      - MaxRequestLatency
-                      - OutstandingRequests
-                      - PendingRevalidationCount
-                      - MaxClientCnxnsPerHost
-                      - MaxSessionTimeout
-                      - MinSessionTimeout
-                      - AvgRequestLatency
-                      obj: org.apache.ZooKeeperService:name0=ReplicatedServer_id1,name1=replica.1,name2=Follower
-                      outputWriters: *id025
-                name: zookeeper.json
-                volume: *id026
-            name: config
-          logs: &id027 !!python/object:dominator.entities.LogVolume
-            container: *id024
-            dest: /var/log/jmxtrans
-            files:
-              jmxtrans.log: !!python/object:dominator.entities.LogFile
-                format: ''
-                length: 0
-                name: jmxtrans.log
-                volume: *id027
-            name: logs
-            path: null
-            ro: false
-      zookeeper-jmxtrans-1: &id029 !!python/object:dominator.entities.Container
-        command: null
-        doors: {}
-        entrypoint: null
-        env: {}
-        hostname: null
-        id: null
-        image: *id028
-        links:
-          graphites: []
-          zookeeper: *id009
-        memory: 536870912
-        name: zookeeper-jmxtrans-1
-        network_mode: ''
-        privileged: false
-        ship: *id017
-        status: null
-        user: ''
-        volumes:
-          config: &id031 !!python/object:dominator.entities.ConfigVolume
-            container: *id029
-            dest: /etc/jmxtrans
-            files:
-              zookeeper.json: !!python/object:dominator.entities.JsonFile
-                content:
-                  servers:
-                  - alias: localship
-                    host: localhost
-                    numQueryThreads: 2
-                    port: 50093
-                    queries:
-                    - attr:
-                      - NodeCount
-                      obj: org.apache.ZooKeeperService:name0=ReplicatedServer_id2,name1=replica.2,name2=Follower,name3=InMemoryDataTree
-                      oper:
-                      - method: countEphemerals
-                        parameters: []
-                      outputWriters: &id030 []
-                    - attr:
-                      - PacketsReceived
-                      - PacketsSent
-                      - NumAliveConnections
-                      - MaxRequestLatency
-                      - OutstandingRequests
-                      - PendingRevalidationCount
-                      - MaxClientCnxnsPerHost
-                      - MaxSessionTimeout
-                      - MinSessionTimeout
-                      - AvgRequestLatency
-                      obj: org.apache.ZooKeeperService:name0=ReplicatedServer_id2,name1=replica.2,name2=Follower
-                      outputWriters: *id030
-                name: zookeeper.json
-                volume: *id031
-            name: config
-          logs: &id032 !!python/object:dominator.entities.LogVolume
-            container: *id029
-            dest: /var/log/jmxtrans
-            files:
-              jmxtrans.log: !!python/object:dominator.entities.LogFile
-                format: ''
-                length: 0
-                name: jmxtrans.log
-                volume: *id032
-            name: logs
-            path: null
-            ro: false
-      zookeeper-jmxtrans-2: &id033 !!python/object:dominator.entities.Container
-        command: null
-        doors: {}
-        entrypoint: null
-        env: {}
-        hostname: null
-        id: null
-        image: *id028
-        links:
-          graphites: []
-          zookeeper: *id015
-        memory: 536870912
-        name: zookeeper-jmxtrans-2
-        network_mode: ''
-        privileged: false
-        ship: *id017
-        status: null
-        user: ''
-        volumes:
-          config: &id035 !!python/object:dominator.entities.ConfigVolume
-            container: *id033
-            dest: /etc/jmxtrans
-            files:
-              zookeeper.json: !!python/object:dominator.entities.JsonFile
-                content:
-                  servers:
-                  - alias: localship
-                    host: localhost
-                    numQueryThreads: 2
-                    port: 50089
-                    queries:
-                    - attr:
-                      - NodeCount
-                      obj: org.apache.ZooKeeperService:name0=ReplicatedServer_id3,name1=replica.3,name2=Follower,name3=InMemoryDataTree
-                      oper:
-                      - method: countEphemerals
-                        parameters: []
-                      outputWriters: &id034 []
-                    - attr:
-                      - PacketsReceived
-                      - PacketsSent
-                      - NumAliveConnections
-                      - MaxRequestLatency
-                      - OutstandingRequests
-                      - PendingRevalidationCount
-                      - MaxClientCnxnsPerHost
-                      - MaxSessionTimeout
-                      - MinSessionTimeout
-                      - AvgRequestLatency
-                      obj: org.apache.ZooKeeperService:name0=ReplicatedServer_id3,name1=replica.3,name2=Follower
-                      outputWriters: *id034
-                name: zookeeper.json
-                volume: *id035
-            name: config
-          logs: &id036 !!python/object:dominator.entities.LogVolume
-            container: *id033
-            dest: /var/log/jmxtrans
-            files:
-              jmxtrans.log: !!python/object:dominator.entities.LogFile
-                format: ''
-                length: 0
-                name: jmxtrans.log
-                volume: *id036
-            name: logs
-            path: null
-            ro: false
-    shipment: *id037
-tasks: {}
+                  /usr/bin/java -server \
+                      -Djava.awt.headless=true \
+                      -Djava.net.preferIPv4Stack=true \
+                      -Djmxtrans.log.level=debug \
+                      -Djmxtrans.log.dir=/var/log/jmxtrans \
+                      -Xms512M \
+                      -Xmx512M \
+                      -XX:+UseConcMarkSweepGC \
+                      -XX:NewRatio=8 \
+                      -XX:NewSize=64m \
+                      -XX:MaxNewSize=64m \
+                      -XX:MaxTenuringThreshold=16 \
+                      -XX:GCTimeRatio=9 \
+                      -XX:PermSize=384m \
+                      -XX:MaxPermSize=384m \
+                      -XX:+UseTLAB \
+                      -XX:CMSInitiatingOccupancyFraction=85 \
+                      -XX:+CMSIncrementalMode \
+                      -XX:+CMSIncrementalPacing \
+                      -XX:ParallelGCThreads=4 \
+                      -Dsun.rmi.dgc.server.gcInterval=28800000 \
+                      -Dsun.rmi.dgc.client.gcInterval=28800000 \
+                      -Dcom.sun.management.jmxremote \
+                      -Dcom.sun.management.jmxremote.ssl=false \
+                      -Dcom.sun.management.jmxremote.authenticate=false \
+                      -Dcom.sun.management.jmxremote.port=2101 \
+                      -jar /root/.m2/repository/org/jmxtrans/jmxtrans/jmxtrans/1.0.0-SNAPSHOT/jmxtrans-1.0.0-SNAPSHOT-all.jar \
+                      -e -j /etc/jmxtrans -s ${INTERVAL:=60} -c false
+              namespace: nikicat
+              parent: !!python/object:dominator.entities.Image
+                namespace: yandex
+                registry: registry.ape.yandex.net
+                repository: trusty
+                tag: latest
+              ports: {}
+              registry: registry.ape.yandex.net
+              repository: jmxtrans
+              scripts:
+              - apt-get -q update && apt-get install -qy openjdk-7-jdk maven && apt-get
+                clean
+              - git clone https://github.com/Naishy/jmxtrans.git
+              - cd jmxtrans && mvn install
+              user: ''
+              volumes:
+                config: /etc/jmxtrans
+                logs: /var/log/jmxtrans
+              workdir: null
+            links:
+              graphites: []
+              zookeeper: *id004
+            memory: 536870912
+            name: zookeeper-jmxtrans-0
+            network_mode: ''
+            privileged: false
+            ship: *id017
+            status: null
+            user: ''
+            volumes: !!python/object:dominator.utils.BackrefDict
+              children:
+                config: &id026 !!python/object:dominator.entities.ConfigVolume
+                  container: *id024
+                  dest: /etc/jmxtrans
+                  files: !!python/object:dominator.utils.BackrefDict
+                    children:
+                      zookeeper.json: !!python/object:dominator.entities.JsonFile
+                        content:
+                          servers:
+                          - alias: localship
+                            host: localhost
+                            numQueryThreads: 2
+                            port: 50097
+                            queries:
+                            - attr:
+                              - NodeCount
+                              obj: org.apache.ZooKeeperService:name0=ReplicatedServer_id1,name1=replica.1,name2=Follower,name3=InMemoryDataTree
+                              oper:
+                              - method: countEphemerals
+                                parameters: []
+                              outputWriters: &id025 []
+                            - attr:
+                              - PacketsReceived
+                              - PacketsSent
+                              - NumAliveConnections
+                              - MaxRequestLatency
+                              - OutstandingRequests
+                              - PendingRevalidationCount
+                              - MaxClientCnxnsPerHost
+                              - MaxSessionTimeout
+                              - MinSessionTimeout
+                              - AvgRequestLatency
+                              obj: org.apache.ZooKeeperService:name0=ReplicatedServer_id1,name1=replica.1,name2=Follower
+                              outputWriters: *id025
+                        name: zookeeper.json
+                        volume: *id026
+                    parent: *id026
+                  name: config
+                logs: &id027 !!python/object:dominator.entities.LogVolume
+                  container: *id024
+                  dest: /var/log/jmxtrans
+                  files: !!python/object:dominator.utils.BackrefDict
+                    children:
+                      jmxtrans.log: !!python/object:dominator.entities.LogFile
+                        format: ''
+                        length: 0
+                        name: jmxtrans.log
+                        volume: *id027
+                    parent: *id027
+                  name: logs
+                  path: null
+                  ro: false
+              parent: *id024
+          zookeeper-jmxtrans-1: &id028 !!python/object:dominator.entities.Container
+            command: null
+            doors: !!python/object:dominator.utils.BackrefDict
+              children: {}
+              parent: *id028
+            entrypoint: null
+            env: {}
+            hostname: null
+            id: null
+            image: *id029
+            links:
+              graphites: []
+              zookeeper: *id009
+            memory: 536870912
+            name: zookeeper-jmxtrans-1
+            network_mode: ''
+            privileged: false
+            ship: *id017
+            status: null
+            user: ''
+            volumes: !!python/object:dominator.utils.BackrefDict
+              children:
+                config: &id031 !!python/object:dominator.entities.ConfigVolume
+                  container: *id028
+                  dest: /etc/jmxtrans
+                  files: !!python/object:dominator.utils.BackrefDict
+                    children:
+                      zookeeper.json: !!python/object:dominator.entities.JsonFile
+                        content:
+                          servers:
+                          - alias: localship
+                            host: localhost
+                            numQueryThreads: 2
+                            port: 50093
+                            queries:
+                            - attr:
+                              - NodeCount
+                              obj: org.apache.ZooKeeperService:name0=ReplicatedServer_id2,name1=replica.2,name2=Follower,name3=InMemoryDataTree
+                              oper:
+                              - method: countEphemerals
+                                parameters: []
+                              outputWriters: &id030 []
+                            - attr:
+                              - PacketsReceived
+                              - PacketsSent
+                              - NumAliveConnections
+                              - MaxRequestLatency
+                              - OutstandingRequests
+                              - PendingRevalidationCount
+                              - MaxClientCnxnsPerHost
+                              - MaxSessionTimeout
+                              - MinSessionTimeout
+                              - AvgRequestLatency
+                              obj: org.apache.ZooKeeperService:name0=ReplicatedServer_id2,name1=replica.2,name2=Follower
+                              outputWriters: *id030
+                        name: zookeeper.json
+                        volume: *id031
+                    parent: *id031
+                  name: config
+                logs: &id032 !!python/object:dominator.entities.LogVolume
+                  container: *id028
+                  dest: /var/log/jmxtrans
+                  files: !!python/object:dominator.utils.BackrefDict
+                    children:
+                      jmxtrans.log: !!python/object:dominator.entities.LogFile
+                        format: ''
+                        length: 0
+                        name: jmxtrans.log
+                        volume: *id032
+                    parent: *id032
+                  name: logs
+                  path: null
+                  ro: false
+              parent: *id028
+          zookeeper-jmxtrans-2: &id033 !!python/object:dominator.entities.Container
+            command: null
+            doors: !!python/object:dominator.utils.BackrefDict
+              children: {}
+              parent: *id033
+            entrypoint: null
+            env: {}
+            hostname: null
+            id: null
+            image: *id029
+            links:
+              graphites: []
+              zookeeper: *id015
+            memory: 536870912
+            name: zookeeper-jmxtrans-2
+            network_mode: ''
+            privileged: false
+            ship: *id017
+            status: null
+            user: ''
+            volumes: !!python/object:dominator.utils.BackrefDict
+              children:
+                config: &id035 !!python/object:dominator.entities.ConfigVolume
+                  container: *id033
+                  dest: /etc/jmxtrans
+                  files: !!python/object:dominator.utils.BackrefDict
+                    children:
+                      zookeeper.json: !!python/object:dominator.entities.JsonFile
+                        content:
+                          servers:
+                          - alias: localship
+                            host: localhost
+                            numQueryThreads: 2
+                            port: 50089
+                            queries:
+                            - attr:
+                              - NodeCount
+                              obj: org.apache.ZooKeeperService:name0=ReplicatedServer_id3,name1=replica.3,name2=Follower,name3=InMemoryDataTree
+                              oper:
+                              - method: countEphemerals
+                                parameters: []
+                              outputWriters: &id034 []
+                            - attr:
+                              - PacketsReceived
+                              - PacketsSent
+                              - NumAliveConnections
+                              - MaxRequestLatency
+                              - OutstandingRequests
+                              - PendingRevalidationCount
+                              - MaxClientCnxnsPerHost
+                              - MaxSessionTimeout
+                              - MinSessionTimeout
+                              - AvgRequestLatency
+                              obj: org.apache.ZooKeeperService:name0=ReplicatedServer_id3,name1=replica.3,name2=Follower
+                              outputWriters: *id034
+                        name: zookeeper.json
+                        volume: *id035
+                    parent: *id035
+                  name: config
+                logs: &id036 !!python/object:dominator.entities.LogVolume
+                  container: *id033
+                  dest: /var/log/jmxtrans
+                  files: !!python/object:dominator.utils.BackrefDict
+                    children:
+                      jmxtrans.log: !!python/object:dominator.entities.LogFile
+                        format: ''
+                        length: 0
+                        name: jmxtrans.log
+                        volume: *id036
+                    parent: *id036
+                  name: logs
+                  path: null
+                  ro: false
+              parent: *id033
+        parent: *id017
+      shipment: *id037
+  parent: *id037
+tasks: !!python/object:dominator.utils.BackrefDict
+  children: {}
+  parent: *id037
 
