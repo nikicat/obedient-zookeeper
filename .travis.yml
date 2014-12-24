@@ -9,7 +9,3 @@ env:
 install:
 - pip install tox bumpversion
 script: tox -v
-notifications:
-  hipchat:
-    rooms:
-      secure: iBo0D+ux1X87cnp56Gz3dh8HZvxgmDPYGJiBQupv8oFlpNwp8i5yBmEi++wDbczGBua9MJR3g/7hP/5b186JeigB3Xdhb5uh493ToOL54SSPVAbBki1lAlrESe2wZq7oH4UpBzP+QVhrzwhX0loF23ZC0Ps3Eo9cr6cURycNO/o=
